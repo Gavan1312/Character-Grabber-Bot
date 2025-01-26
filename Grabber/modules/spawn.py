@@ -42,7 +42,7 @@ async def spawn_character(chat_id):
             2: "🔵 Medium",
             3: "🟠 Rare",
             4: "🟡 Legendary",
-            5: "🪽 Celestial",
+            5: "🎐 Celestial",
             6: "🥵 Divine",
             7: "🥴 Special",
             8: "💎 Premium",

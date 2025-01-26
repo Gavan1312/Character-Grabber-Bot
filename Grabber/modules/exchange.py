@@ -4,8 +4,9 @@ from pyrogram import Client, filters
 from pyrogram.types import Message
 from . import collection, user_collection, sudo_filter, app, capsify
 from .block import block_dec, temp_block
+from typing import List #3.7 for glitch
 
-async def exchange_command(client: Client, message: Message, args: list[str]) -> None:
+async def exchange_command(client: Client, message: Message, args: List[str]) -> None:
     user_id = message.from_user.id
     if temp_block(user_id):
         return

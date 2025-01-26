@@ -12,7 +12,6 @@ class Client(PyrogramClient):
         obj = ResolvePeer(self)
         return await obj.resolve_peer(id)
 
-
 application = Application.builder().token(TOKEN).build()
 Grabberu = Client(
     "Grabber",
@@ -20,8 +19,16 @@ Grabberu = Client(
     api_hash=api_hash,
     bot_token=TOKEN)
 app = Grabberu
+# client = AsyncIOMotorClient(MONGO_URL)
+# Initialize MongoDB Client and Test Connection
 client = AsyncIOMotorClient(MONGO_URL)
-db = client['Character_catcher']
+try:
+    client.server_info()  # Triggers a connection to verify MongoDB is accessible
+    print("Connected to MongoDB successfully!")
+except Exception as e:
+    print(f"Error connecting to MongoDB: {e}")
+
+db = client['Character_Grabber_Game_bot']
 collection = db['anime_characters']
 user_totals_collection = db['user_totals']
 user_collection = db["user_collection"]

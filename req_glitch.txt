@@ -1,0 +1,9 @@
+pip3 install python-telegram-bot
+pip3 install pyrate-limiter
+pip3 install apscheduler
+pip3 install pillow
+
+pip3 install 
+
+
+pip install python-telegram-bot

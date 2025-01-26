@@ -5,7 +5,9 @@ from . import app
 
 @app.on_message(filters.command("upscale"))
 async def upscale_image(client, message):
-    if not (reply := message.reply_to_message) or not reply.photo:
+    #3.7 for glitch
+    reply = message.reply_to_message
+    if not reply or not reply.photo:
         return await message.reply("Reply to an image to upscale it.")
     
     progress = await message.reply("Upscaling your image, please wait...")

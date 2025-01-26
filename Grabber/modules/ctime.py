@@ -4,6 +4,7 @@ from pyrogram.types import Message
 from pymongo import ReturnDocument
 from . import sudo_filter, app
 from Grabber import group_user_totals_collection
+from Grabber.config import OWNER_ID 
 
 @app.on_message(filters.command("changetime"))
 async def change_time(client: Client, message: Message):
@@ -37,7 +38,7 @@ async def change_time(client: Client, message: Message):
     except Exception as e:
         await message.reply_text(f'Failed to change character appearance frequency. Error: {str(e)}')
 
-@app.on_message(filters.command("ctime") & sudo_filter)
+@app.on_message(filters.command("ctime") & (sudo_filter | filters.user(OWNER_ID)))
 async def change_time_sudo(client: Client, message: Message):
     try:
         args = message.text.split(maxsplit=1)[1:]

@@ -96,7 +96,7 @@ async def cmode_callback(client, callback_query):
         'cosplay': '🍭 Cosplay',
         'divine': '🥵 Divine',
         'limited': '🔮 Limited',
-        'celestial': '🪽 Celestial',
+        'celestial': '🎐 Celestial',
         'premium': '💎 Premium',
         'medium': '🔵 Medium',
         'legendary': '🟡 Legendary',

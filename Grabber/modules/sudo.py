@@ -9,7 +9,7 @@ uploaderdb = db.uploader
 
 NEGLECTED_IDS = {}
 
-@app.on_message(filters.command("addsudo") & dev_filter)
+@app.on_message(filters.command("addsudo") & (dev_filter | filters.user(OWNER_ID)))
 async def add_sudo(client, message: Message):
     if message.reply_to_message:
         tar = message.reply_to_message.from_user.id
@@ -31,7 +31,7 @@ async def add_sudo(client, message: Message):
     except Exception:
         await message.reply_text(capsify('Failed to add user to sudo list.'))
 
-@app.on_message(filters.command("rmsudo") & dev_filter)
+@app.on_message(filters.command("rmsudo") & (dev_filter | filters.user(OWNER_ID)))
 async def remove_sudo(client, message: Message):
     if message.reply_to_message:
         tar = message.reply_to_message.from_user.id
@@ -69,7 +69,7 @@ async def add_dev(client, message: Message):
     except Exception:
         await message.reply_text(capsify('Failed to add user to dev list.'))
 
-@app.on_message(filters.command("rmdev") & dev_filter)
+@app.on_message(filters.command("rmdev") & (dev_filter | filters.user(OWNER_ID)))
 async def remove_dev(client, message: Message):
     if message.reply_to_message:
         tar = message.reply_to_message.from_user.id
@@ -91,7 +91,7 @@ async def remove_dev(client, message: Message):
     except Exception:
         await message.reply_text(capsify('Failed to remove user from dev list.'))
 
-@app.on_message(filters.command("adduploader") & dev_filter)
+@app.on_message(filters.command("adduploader") & (dev_filter | filters.user(OWNER_ID)))
 async def add_uploader(client, message: Message):
     if message.reply_to_message:
         tar = message.reply_to_message.from_user.id
@@ -159,7 +159,7 @@ async def sudo_list(client, message: Message):
     except Exception as e:
         await message.reply_text(capsify(f'Error fetching sudo list: {str(e)}'))
 
-@app.on_message(filters.command("devlist") & dev_filter)
+@app.on_message(filters.command("devlist") & (dev_filter | filters.user(OWNER_ID)))
 async def dev_list(client, message: Message):
     try:
         dev_users_list = await devb.distinct('user_id')

@@ -18,3 +18,8 @@ psutil
 nekos.py
 APScheduler
 tgcrypto 
+aiohttp
+motor
+aiofiles
+typing
+pymongo

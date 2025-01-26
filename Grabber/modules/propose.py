@@ -12,7 +12,7 @@ rarity_map = {
     "🔵 Medium": True,
     "🟠 Rare": True,
     "🟡 Legendary": True,
-    "🪽 Celestial": True,
+    "🎐 Celestial": True,
 }
 
 last_propose_times = {}

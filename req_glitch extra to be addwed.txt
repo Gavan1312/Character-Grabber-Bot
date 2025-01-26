@@ -1,0 +1,7 @@
+pip install aiohttp
+pip install motor
+pip install aiofiles
+pip install typing
+pip install pymongo
+pip install cachetools
+

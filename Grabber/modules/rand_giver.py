@@ -8,7 +8,7 @@ rarity_percentages = {
     "🔵 Medium": 20,
     "🟠 Rare": 40,
     "🟡 Legendary": 10,
-    "🪽 Celestial": 57,
+    "🎐 Celestial": 57,
     "🥵 Divine": 2,
     "🥴 Special": 89,
     "💎 Premium": 100,
