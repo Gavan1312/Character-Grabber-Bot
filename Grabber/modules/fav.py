@@ -30,16 +30,29 @@ async def fav(client: Client, message: Message):
     if message.chat.id == -1002225496870:
         await handle_confirmation(user_id, character_id, character)
     else:
-        keyboard = IKM(
-            [
-                [IKB(capsify("INLINE"), switch_inline_query_current_chat=f"{character_id}")],
+        # Send the image with confirmation buttons in a single message
+        await message.reply_photo(
+            photo=character['img_url'],  # Use the character's image URL
+            caption=capsify(f'Are you sure you want to make {character["name"]} your favorite Waifu?'),
+            reply_markup=IKM(
                 [
-                    IKB(capsify("CONFIRM"), callback_data=f'confirm_{user_id}_{character_id}'),
-                    IKB(capsify("CANCEL"), callback_data=f'cancel_{user_id}_{character_id}')
+                    [
+                        IKB(capsify("✅ Yes"), callback_data=f'confirm_{user_id}_{character_id}'),
+                        IKB(capsify("❌ No"), callback_data=f'cancel_{user_id}_{character_id}')
+                    ]
                 ]
-            ]
+            )
         )
-        await message.reply_text(capsify(f'Do you want to make {character["name"]} your favorite slave?'), reply_markup=keyboard)
+        # keyboard = IKM(
+        #     [
+        #         [IKB(capsify("INLINE"), switch_inline_query_current_chat=f"{character_id}")],
+        #         [
+        #             IKB(capsify("CONFIRM"), callback_data=f'confirm_{user_id}_{character_id}'),
+        #             IKB(capsify("CANCEL"), callback_data=f'cancel_{user_id}_{character_id}')
+        #         ]
+        #     ]
+        # )
+        # await message.reply_text(capsify(f'Do you want to make {character["name"]} your favorite slave?'), reply_markup=keyboard)
 
 async def handle_confirmation(user_id, character_id, character=None):
     if character:

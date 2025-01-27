@@ -1,7 +1,17 @@
-pip install aiohttp
-pip install motor
-pip install aiofiles
-pip install typing
-pip install pymongo
-pip install cachetools
+pip3 install -U -r requirements.txt    
 
+pip3 install aiohttp
+pip3 install motor
+pip3 install aiofiles
+pip3 install typing
+pip3 install pymongo
+pip3 install cachetools
+pip3 install python-telegram-bot
+pip3 install pyrate-limiter
+pip3 install apscheduler
+pip3 install pillow
+pip3 install pyrogram
+pip3 install tgcrypto
+
+pip3 install flask
+pip3 install gunicorn

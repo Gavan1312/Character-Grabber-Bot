@@ -13,12 +13,13 @@ async def harem(client, message, page=0):
 
     user = await user_collection.find_one({'id': user_id})
     if not user:
-        message_text = capsify("You have not grabbed any slaves yet...")
+        message_text = capsify("You have not grabbed any Characters yet...")
         await message.reply_text(message_text)
         return
 
     cmode = user.get('collection_mode', 'All')
     characters = [char for char in user['characters'] if cmode == 'All' or char.get('rarity', '') == cmode]
+    total_actual_count = len(characters)
     characters = sorted(characters, key=lambda x: (x['anime'], x['id']))
     character_counts = {k: len(list(v)) for k, v in groupby(characters, key=lambda x: x['id'])}
     unique_characters = list({character['id']: character for character in characters}.values())
@@ -30,19 +31,30 @@ async def harem(client, message, page=0):
     harem_message = capsify(f"Collection - Page {page + 1}/{total_pages}\n--------------------------------------\n\n")
     current_characters = unique_characters[page * 7:(page + 1) * 7]
 
+    seen_animes = set()
+    new_format_for_harem = True
+
     for character in current_characters:
+        anime_name = character['anime']
         count = character_counts[character['id']]
-        harem_message += (
-            f"♦️ {capsify(character['name'])} (x{count})\n"
-            f"   Anime: {character['anime']}\n"
-            f"   ID: {character['id']}\n"
-            f"   {character.get('rarity', '')}\n\n"
-        )
+        if anime_name not in seen_animes:  # Check if this anime name has been added
+            harem_message += capsify(f"Anime: {anime_name}\n")
+            seen_animes.add(anime_name)  # Add anime name to the set
+        if new_format_for_harem:
+            harem_message += f"➥ {str(character['id']).zfill(3)} | {character.get('rarity', '')} | {character['name']} x{count}\n"
+        else:
+            # harem_message += (
+            #     f"♦️ {capsify(character['name'])} (x{count})\n"
+            #     f"   ID: {character['id']}\n"
+            #     f"   {character.get('rarity', '')}\n\n"
+            # )
+            harem_message += f"{capsify(character['name'])} (x{count})  ID: {character['id']}  {character.get('rarity', '')}\n\n"
 
     harem_message += "--------------------------------------\n"
     harem_message += capsify(f"Harem Mode: {cmode}\n")  # Added Harem Mode here
     total_count = len(unique_characters)
-    harem_message += capsify(f"Total Characters: {total_count}")
+    harem_message += capsify(f"Total Characters: {total_actual_count}\n")
+    harem_message += capsify(f"Total Unique Characters: {total_count}")
 
     inline_query = f"collection.{user_id}"
     if cmode != 'All':
@@ -131,21 +143,34 @@ async def harem_callback(client, callback_query):
         await callback_query.answer()
         page = 0
 
-    harem_message = capsify(f"Collection - Page {page + 1}/{total_pages}\n--------------------------------------\n\n")
+    harem_message = capsify(f"Harem - Page {page + 1}/{total_pages}\n--------------------------------------\n\n")
     current_characters = unique_characters[page * 7:(page + 1) * 7]
 
+    seen_animes = set()
+    new_format_for_harem = True
+
     for character in current_characters:
+        anime_name = character['anime']
         count = character_counts[character['id']]
-        harem_message += (
-            f"♦️ {capsify(character['name'])} (x{count})\n"
-            f"   Anime: {character['anime']}\n"
-            f"   ID: {character['id']}\n"
-            f"   {character.get('rarity', '')}\n\n"
-        )
+        if anime_name not in seen_animes:  # Check if this anime name has been added
+            harem_message += capsify(f"Anime: {anime_name}\n")
+            seen_animes.add(anime_name)  # Add anime name to the set
+        if new_format_for_harem:
+            harem_message += f"➥ {str(character['id']).zfill(3)} | {character.get('rarity', '')} | {character['name']} x{count}\n"
+        else:
+            # harem_message += (
+            #     f"♦️ {capsify(character['name'])} (x{count})\n"
+            #     f"   ID: {character['id']}\n"
+            #     f"   {character.get('rarity', '')}\n\n"
+            # )
+            harem_message += f"{capsify(character['name'])} (x{count})  ID: {character['id']}  {character.get('rarity', '')}\n\n"
 
     harem_message += "--------------------------------------\n"
+    harem_message += capsify(f"Harem Mode: {cmode}\n")  # Added Harem Mode here
     total_count = len(unique_characters)
-    harem_message += capsify(f"Total Characters: {total_count}")
+    total_actual_count = len(characters)
+    harem_message += capsify(f"Total Characters: {total_actual_count}\n")
+    harem_message += capsify(f"Total Unique Characters: {total_count}")
 
     keyboard = [[IKB(capsify(f"Inline ({total_count})"), switch_inline_query_current_chat=f"collection.{user_id}")]]
     if total_pages > 1:

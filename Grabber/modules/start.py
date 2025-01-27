@@ -5,13 +5,13 @@ from . import user_collection, app, capsify
 from Grabber import *
 from .block import block_dec, temp_block, block_cbq
 from datetime import datetime
+from Grabber.config import * 
 
 
 sudb = db.sudo
 devb = db.dev
 uploaderdb = db.uploader
 
-BOT_NAME = "Okarun"
 start_text = f"👋 Hi, this is {BOT_NAME}, an anime-based games bot! Add me to your group to start your journey."
 credits_text = (
     "Bot Credits\n\n"
@@ -22,8 +22,9 @@ credits_text = (
 support_buttons = [
     [IKB(capsify("Support"), url=f"https://t.me/{SUPPORT_CHAT}"),
      IKB(capsify("Updates"), url=f"https://t.me/{UPDATE_CHAT}")],
-    [IKB(capsify("Add Me Baby 🐥"), url=f"https://t.me/{BOT_USERNAME}?startgroup=true")],
-    [IKB(capsify("Help"), url=f"https://t.me/{SUPPORT_CHAT}"),
+    [IKB(capsify("Add Me Baby 🐥"), url=f"https://t.me/{BOT_USERNAME}?startgroup=true"),
+     IKB(capsify("Database"), url=f"https://t.me/{DATABASE_CHANNEL_ID}")],
+    [IKB(capsify("Help"), url=f"https://t.me/{HELP_CHAT}"),
      IKB(capsify("Credits"), callback_data="credits")]
 ]
 
@@ -63,13 +64,22 @@ async def startp(_, message):
             }
         )
 
-    random_video = random.choice(PHOTO_URL)
-    await _.send_video(
-        chat_id=id,
-        video=random_video,
-        caption=capsify(start_text),
-        reply_markup=IKM(support_buttons)
-    )
+    if Video_Show_for_start:
+        random_video = random.choice(PHOTO_URL)
+        await _.send_video(
+            chat_id=id,
+            video=random_video,
+            caption=capsify(start_text),
+            reply_markup=IKM(support_buttons)
+        )
+    else:
+        random_image = random.choice(PHOTO_URL)
+        await _.send_photo(
+            chat_id=id,
+            photo=random_image,
+            caption=capsify(start_text),
+            reply_markup=IKM(support_buttons)
+        )
 
 @app.on_message(filters.command("start") & filters.group)
 @block_dec
@@ -188,6 +198,7 @@ async def suploader(_, callback_query):
 @app.on_callback_query(filters.regex("main"))
 async def main(_, callback_query):
     random_video = random.choice(PHOTO_URL)
+    random_image = random.choice(PHOTO_URL)
     await callback_query.edit_message_text(
         text=capsify(start_text),
         reply_markup=IKM(support_buttons)

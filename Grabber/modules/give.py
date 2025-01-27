@@ -92,6 +92,95 @@ async def add_characters_command(client, message):
     result_message = await add_all_characters_for_user(user_id_to_add_characters_for)
     await message.reply_text(result_message)
 
+
+async def add_selected_characters_for_user(user_id, character_ids, only_new=False):
+    # Find the user in the database
+    user = await user_collection.find_one({'id': user_id})
+
+    if not user:
+        return f"User with ID {user_id} not found."
+
+    # Find characters in the database with the given IDs (as strings)
+    valid_characters_cursor = collection.find({'id': {'$in': character_ids}})
+    valid_characters = await valid_characters_cursor.to_list(length=None)
+
+    if only_new:
+        # Check which characters are not already in the user's list
+        existing_character_ids = {character['id'] for character in user.get('characters', [])}
+        new_characters = [character for character in valid_characters if character['id'] not in existing_character_ids]
+
+        if not new_characters:
+            return f"No new characters to add for user {user_id}."
+
+        # Update the user's character list with only new characters
+        await user_collection.update_one(
+            {'id': user_id},
+            {'$push': {'characters': {'$each': new_characters}}}
+        )
+        return f"Successfully added {len(new_characters)} new character(s) for user {user_id}."
+    else:
+        # Add all valid characters (without filtering)
+        await user_collection.update_one(
+            {'id': user_id},
+            {'$push': {'characters': {'$each': valid_characters}}}
+        )
+        return f"Successfully added {len(valid_characters)} character(s) for user {user_id}."
+
+@app.on_message(filters.command(["give_selected_characters"]) & sudo_filter)
+async def give_selected_characters_command(client, message):
+    # Check if the command is a reply
+    if not message.reply_to_message:
+        await message.reply_text("You need to reply to a user's message with a comma-separated list of character IDs!")
+        return
+
+    # Extract the user ID of the replied-to user
+    user_id_to_add_characters_for = message.reply_to_message.from_user.id
+
+    # Extract the list of character IDs from the command message
+    if len(message.text.split(maxsplit=1)) < 2:
+        await message.reply_text("Please provide a comma-separated list of character IDs.")
+        return
+
+    character_ids_text = message.text.split(maxsplit=1)[-1]
+    try:
+        # Keep the IDs as strings (no conversion to integers)
+        character_ids = [char_id.strip() for char_id in character_ids_text.split(",")]
+    except Exception:
+        await message.reply_text("Please provide a valid comma-separated list of character IDs.")
+        return
+
+    # Call the function to add selected characters
+    result_message = await add_selected_characters_for_user(user_id_to_add_characters_for, character_ids)
+    await message.reply_text(result_message)
+
+
+@app.on_message(filters.command(["give_selected_characters_only_new"]) & sudo_filter)
+async def give_selected_characters_only_new_command(client, message):
+    # Check if the command is a reply
+    if not message.reply_to_message:
+        await message.reply_text("You need to reply to a user's message with a comma-separated list of character IDs!")
+        return
+
+    # Extract the user ID of the replied-to user
+    user_id_to_add_characters_for = message.reply_to_message.from_user.id
+
+    # Extract the list of character IDs from the command message
+    if len(message.text.split(maxsplit=1)) < 2:
+        await message.reply_text("Please provide a comma-separated list of character IDs.")
+        return
+
+    character_ids_text = message.text.split(maxsplit=1)[-1]
+    try:
+        # Keep the IDs as strings (no conversion to integers)
+        character_ids = [char_id.strip() for char_id in character_ids_text.split(",")]
+    except Exception:
+        await message.reply_text("Please provide a valid comma-separated list of character IDs.")
+        return
+
+    # Call the function to add selected characters (only new)
+    result_message = await add_selected_characters_for_user(user_id_to_add_characters_for, character_ids, only_new=True)
+    await message.reply_text(result_message)
+
 async def kill_character(receiver_id, character_id):
     character = await collection.find_one({'id': character_id})
 
