@@ -117,11 +117,13 @@ async def guess(_, message):
             return
         character_price = character['price']
         user_balance = await show(user_id)
-        if user_balance < character_price:
+        # if user_balance < character_price:
+        temp_true_variable = False
+        if temp_true_variable == True:
             await message.reply_text(capsify("❌ NOT ENOUGH COINS TO CLAIM THIS CHARACTER."))
             return
         await user_collection.update_one({'id': user_id}, {'$push': {'characters': character}})
-        await deduct(user_id, character_price)
+        # await deduct(user_id, character_price)
         await group_user_totals_collection.update_one(
             {'user_id': user_id, 'group_id': chat_id},
             {'$inc': {'count': 1}},

@@ -67,7 +67,7 @@ async def gift(client, message):
         f"{capsify('🎁 CONFIRM GIFTING')}\n\n"
         f"{capsify('♦️ NAME:')} {capsify(character['name'])} \n"
         f"{capsify('🧧 ANIME:')} {capsify(character['anime'])}\n"
-        f"{capsify('🆔:')} {character['id']:03}\n"
+        f"{capsify('🆔:')} {int(character['id']):03}\n"
         f"{capsify('🌟:')} {character.get('rarity', '🔮 LIMITED')}\n\n"
         f"{capsify('GIFTS LEFT:')} {gifts_left}"
     )

@@ -13,10 +13,11 @@ sudb = db.sudo
 devb = db.dev 
 app = Grabberu
 
-dev_users = {6919722801}
+dev_users = {880926547}
 
 ALPHABETS = "abcdefghijklmnopqrstuvwxyz"
 ALL_CAPS = "ᴀʙᴄᴅᴇғɢʜɪᴊᴋʟᴍɴᴏᴘǫʀsᴛᴜᴠᴡxʏᴢ"
+# ALL_CAPS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 def capsify(text: str) -> str:
     txt = ""

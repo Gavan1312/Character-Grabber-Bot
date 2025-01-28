@@ -13,18 +13,18 @@ async def fav(client: Client, message: Message):
         return
 
     if len(message.command) < 2:
-        await message.reply_text(capsify('Please provide Slave ID...'))
+        await message.reply_text(capsify('Please provide Character ID...'))
         return
 
     character_id = message.command[1]
     user = await user_collection.find_one({'id': user_id})
     if not user:
-        await message.reply_text(capsify('You have not got any Slave yet...'))
+        await message.reply_text(capsify('You have not got any Waifus yet...😣'))
         return
 
     character = next((c for c in user['characters'] if c['id'] == character_id), None)
     if not character:
-        await message.reply_text(capsify('This slave is not in your list'))
+        await message.reply_text(capsify('This Waifu is not in your collection🙄'))
         return
 
     if message.chat.id == -1002225496870:
@@ -60,9 +60,9 @@ async def handle_confirmation(user_id, character_id, character=None):
         if user:
             user['favorites'] = [character_id]
             await user_collection.update_one({'id': user_id}, {'$set': {'favorites': user['favorites']}})
-            await app.send_message(user_id, capsify(f'Slave {character["name"]} is your favorite now...'))
+            await app.send_message(user_id, capsify(f'Waifu {character["name"]} is your favorite now...'))
     else:
-        await app.send_message(user_id, capsify('You have not got any slave yet...'))
+        await app.send_message(user_id, capsify('You have not got any Waifu yet...'))
 
 @app.on_callback_query(filters.regex(r'^(confirm_|cancel_)'))
 @block_cbq
@@ -88,10 +88,10 @@ async def button(client: Client, callback_query: CallbackQuery):
                 if character:
                     user['favorites'] = [character_id]
                     await user_collection.update_one({'id': user_id}, {'$set': {'favorites': user['favorites']}})
-                    await callback_query.message.edit_text(capsify(f'Slave {character["name"]} is your favorite now...'))
+                    await callback_query.message.edit_text(capsify(f'Waifu {character["name"]} is your favorite now...'))
                 else:
-                    await callback_query.message.edit_text(capsify('This slave is not in your list'))
+                    await callback_query.message.edit_text(capsify('This Waifu is not present in your Collection 🙄'))
             else:
-                await callback_query.message.edit_text(capsify('You have not got any slave yet...'))
+                await callback_query.message.edit_text(capsify('You have not got any Waifus yet...😣'))
         elif action == "cancel":
             await callback_query.message.edit_text(capsify('Operation canceled.'))

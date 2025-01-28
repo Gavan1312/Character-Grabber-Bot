@@ -28,7 +28,7 @@ async def harem(client, message, page=0):
     if page < 0 or page >= total_pages:
         page = 0
 
-    harem_message = capsify(f"Collection - Page {page + 1}/{total_pages}\n--------------------------------------\n\n")
+    harem_message = capsify(f"Harem - Page {page + 1}/{total_pages}\n\n")
     current_characters = unique_characters[page * 7:(page + 1) * 7]
 
     seen_animes = set()
@@ -38,10 +38,11 @@ async def harem(client, message, page=0):
         anime_name = character['anime']
         count = character_counts[character['id']]
         if anime_name not in seen_animes:  # Check if this anime name has been added
-            harem_message += capsify(f"Anime: {anime_name}\n")
+            harem_message += capsify(f"Anime: {anime_name}\n.........................................\n\n")
             seen_animes.add(anime_name)  # Add anime name to the set
         if new_format_for_harem:
-            harem_message += f"➥ {str(character['id']).zfill(3)} | {character.get('rarity', '')} | {character['name']} x{count}\n"
+            character_detail_from_harem = f"➥ {str(character['id']).zfill(3)} | {character.get('rarity', '')} \n {character['name']} x{count}\n\n"
+            harem_message += capsify(character_detail_from_harem)
         else:
             # harem_message += (
             #     f"♦️ {capsify(character['name'])} (x{count})\n"
@@ -50,35 +51,42 @@ async def harem(client, message, page=0):
             # )
             harem_message += f"{capsify(character['name'])} (x{count})  ID: {character['id']}  {character.get('rarity', '')}\n\n"
 
-    harem_message += "--------------------------------------\n"
+    harem_message += ".........................................\n\n"
     harem_message += capsify(f"Harem Mode: {cmode}\n")  # Added Harem Mode here
     total_count = len(unique_characters)
     harem_message += capsify(f"Total Characters: {total_actual_count}\n")
-    harem_message += capsify(f"Total Unique Characters: {total_count}")
+    harem_message += capsify(f"Unique Characters: {total_count}")
 
     inline_query = f"collection.{user_id}"
     if cmode != 'All':
         inline_query += f".{cmode}"
 
-    keyboard = [[IKB(capsify(f"Inline ({total_count})"), switch_inline_query_current_chat=inline_query)]]
-    
+    # keyboard = [[IKB(capsify(f"Inline ({total_count})"), switch_inline_query_current_chat=inline_query)]]
+    keyboard = []
+    # inline_user = IKB(capsify(f"🌐 ({total_count})"), switch_inline_query_current_chat=inline_query)
+    inline_user = IKB(capsify(f"🌐"), switch_inline_query_current_chat=inline_query)
+   
     if total_pages > 1:
         nav_buttons = []
         if page > 0:
-            nav_buttons.append(IKB(capsify("◄"), callback_data=f"harem:{page - 1}:{user_id}"))
+            nav_buttons.append(IKB(capsify("⬅"), callback_data=f"harem:{page - 1}:{user_id}"))
         if page < total_pages - 1:
-            nav_buttons.append(IKB(capsify("►"), callback_data=f"harem:{page + 1}:{user_id}"))
+            nav_buttons.append(IKB(capsify("➡"), callback_data=f"harem:{page + 1}:{user_id}"))
         keyboard.append(nav_buttons)
 
         skip_buttons = []
+        skip_buttons.append(inline_user)
         if page > 4:
-            skip_buttons.append(IKB(capsify("x5◀"), callback_data=f"harem:{page - 5}:{user_id}"))
+            skip_buttons.append(IKB(capsify("x5⬅"), callback_data=f"harem:{page - 5}:{user_id}"))
         if page < total_pages - 5:
-            skip_buttons.append(IKB(capsify("▶5x"), callback_data=f"harem:{page + 5}:{user_id}"))
-        keyboard.append(skip_buttons)
+            skip_buttons.append(IKB(capsify("➡5x"), callback_data=f"harem:{page + 5}:{user_id}"))
+            
+        # keyboard.append(skip_buttons)
 
-    close_button = [IKB(capsify("Close"), callback_data=f"harem:close_{user_id}")]
-    keyboard.append(close_button)
+        # close_button = [(inline_user),(skip_buttons),(IKB(capsify("🗑️"), callback_data=f"harem:close_{user_id}"))]
+        skip_buttons.append((IKB(capsify("🗑️"), callback_data=f"harem:close_{user_id}")))
+        close_button = skip_buttons
+        keyboard.append(close_button)
 
     markup = IKM(keyboard)
 
@@ -143,7 +151,7 @@ async def harem_callback(client, callback_query):
         await callback_query.answer()
         page = 0
 
-    harem_message = capsify(f"Harem - Page {page + 1}/{total_pages}\n--------------------------------------\n\n")
+    harem_message = capsify(f"Harem - Page {page + 1}/{total_pages}\n\n")
     current_characters = unique_characters[page * 7:(page + 1) * 7]
 
     seen_animes = set()
@@ -153,10 +161,11 @@ async def harem_callback(client, callback_query):
         anime_name = character['anime']
         count = character_counts[character['id']]
         if anime_name not in seen_animes:  # Check if this anime name has been added
-            harem_message += capsify(f"Anime: {anime_name}\n")
+            harem_message += capsify(f"Anime: {anime_name}\n.........................................\n\n")
             seen_animes.add(anime_name)  # Add anime name to the set
         if new_format_for_harem:
-            harem_message += f"➥ {str(character['id']).zfill(3)} | {character.get('rarity', '')} | {character['name']} x{count}\n"
+            character_detail_from_harem = f"➥ {str(character['id']).zfill(3)} | {character.get('rarity', '')} \n {character['name']} x{count}\n\n"
+            harem_message += capsify(character_detail_from_harem)
         else:
             # harem_message += (
             #     f"♦️ {capsify(character['name'])} (x{count})\n"
@@ -165,31 +174,39 @@ async def harem_callback(client, callback_query):
             # )
             harem_message += f"{capsify(character['name'])} (x{count})  ID: {character['id']}  {character.get('rarity', '')}\n\n"
 
-    harem_message += "--------------------------------------\n"
+    harem_message += ".........................................\n\n"
     harem_message += capsify(f"Harem Mode: {cmode}\n")  # Added Harem Mode here
     total_count = len(unique_characters)
     total_actual_count = len(characters)
     harem_message += capsify(f"Total Characters: {total_actual_count}\n")
-    harem_message += capsify(f"Total Unique Characters: {total_count}")
+    harem_message += capsify(f"Unique Characters: {total_count}")
 
-    keyboard = [[IKB(capsify(f"Inline ({total_count})"), switch_inline_query_current_chat=f"collection.{user_id}")]]
+    # keyboard = [[IKB(capsify(f"Inline ({total_count})"), switch_inline_query_current_chat=f"collection.{user_id}")]]
+    keyboard = []
+    # inline_user = (IKB(capsify(f"🌐 ({total_count})"), switch_inline_query_current_chat=f"collection.{user_id}"))
+    inline_user = (IKB(capsify(f"🌐"), switch_inline_query_current_chat=f"collection.{user_id}"))
+    
     if total_pages > 1:
         nav_buttons = []
         if page > 0:
-            nav_buttons.append(IKB(capsify("◄"), callback_data=f"harem:{page - 1}:{user_id}"))
+            nav_buttons.append(IKB(capsify("⬅"), callback_data=f"harem:{page - 1}:{user_id}"))
         if page < total_pages - 1:
-            nav_buttons.append(IKB(capsify("►"), callback_data=f"harem:{page + 1}:{user_id}"))
+            nav_buttons.append(IKB(capsify("➡"), callback_data=f"harem:{page + 1}:{user_id}"))
         keyboard.append(nav_buttons)
 
         skip_buttons = []
+        skip_buttons.append(inline_user)
         if page > 4:
-            skip_buttons.append(IKB(capsify("x5◀"), callback_data=f"harem:{page - 5}:{user_id}"))
+            skip_buttons.append(IKB(capsify("x5⬅"), callback_data=f"harem:{page - 5}:{user_id}"))
         if page < total_pages - 5:
-            skip_buttons.append(IKB(capsify("▶5x"), callback_data=f"harem:{page + 5}:{user_id}"))
-        keyboard.append(skip_buttons)
+            skip_buttons.append(IKB(capsify("➡5x"), callback_data=f"harem:{page + 5}:{user_id}"))
+            
+        # keyboard.append(skip_buttons)
 
-    close_button = [IKB(capsify("Close"), callback_data=f"harem:close_{user_id}")]
-    keyboard.append(close_button)
+        # close_button = [(inline_user),(skip_buttons),(IKB(capsify("🗑️"), callback_data=f"harem:close_{user_id}"))]
+        skip_buttons.append((IKB(capsify("🗑️"), callback_data=f"harem:close_{user_id}")))
+        close_button = skip_buttons
+        keyboard.append(close_button)
 
     markup = IKM(keyboard)
 
