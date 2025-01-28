@@ -66,16 +66,16 @@ async def roll_dart(client: Client, message: t.Message):
     if slot_value == 1:  # Only 1 is a jackpot now
         reward = jackpot_multiplier * slot_amount
         await add(user_id, reward)
-        await message.reply_text(f"[🎰](https://graph.org//file/18f84c8f4059fa74bc2ff.jpg) You hit the jackpot!\nYou won ₳{reward}!")
+        await message.reply_text(f"[🎰] You hit the jackpot!\nYou won ₳{reward}!")
         await add_xp(user_id, 6)
     elif slot_value == 2:  # Only 2 is a two-equal win
         reward = two_equal_multiplier * slot_amount
         await add(user_id, reward)
-        await message.reply_text(f"[🎰](https://graph.org//file/18f84c8f4059fa74bc2ff.jpg) Two signs came out equal!\nYou won ₳{reward}!")
+        await message.reply_text(f"[🎰] Two signs came out equal!\nYou won ₳{reward}!")
         await add_xp(user_id, 4)
     else:
         await deduct(user_id, slot_amount)
-        await message.reply_text(f"[🍷](https://graph.org//file/18f84c8f4059fa74bc2ff.jpg) Nothing got matched!\nYou lost ₳{slot_amount}.")
+        await message.reply_text(f"[🍷] Nothing got matched!\nYou lost ₳{slot_amount}.")
         await deduct_xp(user_id, 2)
 
 async def add_xp(user_id, xp_amount):

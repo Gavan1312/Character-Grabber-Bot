@@ -113,14 +113,14 @@ async def rename_celestial_icon(client: Client, message: Message):
     try:
         # Perform asynchronous updates
         result = await collection.update_many(
-            {"rarity": "🪽 Celestial"},  # Filter
+            {"rarity": "🎐 Celestial"},  # Filter
             {"$set": {"rarity": "🎐 Celestial"}}  # Update operation
         )
 
         result1 = await user_collection.update_many(
-            {"characters.rarity": "🪽 Celestial"},  # Filter documents with matching rarity in characters array
+            {"characters.rarity": "🎐 Celestial"},  # Filter documents with matching rarity in characters array
             {"$set": {"characters.$[elem].rarity": "🎐 Celestial"}},  # Update operation
-            array_filters=[{"elem.rarity": "🪽 Celestial"}]  # Array filter
+            array_filters=[{"elem.rarity": "🎐 Celestial"}]  # Array filter
         )
 
         # Send success message to the bot user

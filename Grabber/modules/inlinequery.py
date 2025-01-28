@@ -31,7 +31,7 @@ rarity_map = {
     "🎐": "Celestial", 
     "🥵": "Divine",
     "🥴": "Special", 
-    "💎": "Premium", 
+    "💮": "Exclusive", 
     "🔮": "Limited", 
     "🍭": "Cosplay", 
     "💋": "Aura", 

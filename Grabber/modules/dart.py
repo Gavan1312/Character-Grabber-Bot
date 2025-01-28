@@ -54,11 +54,11 @@ async def roll_dart(client: Client, message: t.Message):
     if value.dice.value == 6:
         reward_amount = dart_amount * 3
         await add(user_id, reward_amount)
-        await message.reply_text(f"[🎯](https://graph.org//file/377806066e2e43256dd00.jpg) You're lucky!\nYou won ₩{reward_amount}")
+        await message.reply_text(f"[🎯] You're lucky!\nYou won ₩{reward_amount}")
         await add_xp(user_id, 4)
     else:
         await deduct(user_id, dart_amount)
-        await message.reply_text(f"[🎯](https://graph.org//file/377806066e2e43256dd00.jpg) Better luck next time!\nYou lost ₩{dart_amount}")
+        await message.reply_text(f"[🎯] Better luck next time!\nYou lost ₩{dart_amount}")
         await deduct_xp(user_id, 2)
 
     last_usage_time_roll[user_id] = current_time

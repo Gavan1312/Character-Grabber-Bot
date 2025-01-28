@@ -52,11 +52,11 @@ async def roll_dart(client: Client, message: t.Message):
     await asyncio.sleep(2)
     if value.dice.value == 6:  # Winning only if the dice rolls a 6
         await add(user_id, bastek_amount)
-        await message.reply_text(f"[🏀](https://graph.org//file/5a2360e5023e2976eb23c.jpg) You're lucky!\nYou won ₩{bastek_amount}")
+        await message.reply_text(f"[🏀] You're lucky!\nYou won ₩{bastek_amount}")
         await add_xp(user_id, 4)
     else:
         await deduct(user_id, bastek_amount)
-        await message.reply_text(f"[🍷](https://graph.org//file/5a2360e5023e2976eb23c.jpg) Better luck next time!\nYou lost ₩{bastek_amount}")
+        await message.reply_text(f"[🍷] Better luck next time!\nYou lost ₩{bastek_amount}")
         await deduct_xp(user_id, 2)
 
     last_usage_time_roll[user_id] = current_time
