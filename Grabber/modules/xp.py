@@ -44,7 +44,13 @@ async def check_stats(_, message: Message):
     user_data = await user_collection.find_one({'id': user_id})
     
     if not user_data:
-        return await message.reply_text("You need to start the bot first.")
+        # return await message.reply_text("You need to start the bot first.")
+        return await message.reply_text(
+            capsify("🚀 You need to start the bot first. in DM."),
+            reply_markup=IKM([
+                [IKB(capsify("Start in DM"), url=f"https://t.me/{BOT_USERNAME}?start=start")]
+            ])
+        )
     
     user_xp_data = await user_collection.find_one({'id': user_id})
     

@@ -11,7 +11,7 @@ rarity_percentages = {
     "🎐 Celestial": 57,
     "🥵 Divine": 2,
     "🥴 Special": 89,
-    "💎 Premium": 100,
+    "💮 Exclusive": 100,
     "🔮 Limited": 45,
     "🍭 Cosplay": 19,
 }

@@ -44,7 +44,7 @@ use Rarity Number accordingly rarity Map
 | 5    | 🎐 Celestial   |  
 | 6    | 🥵 Divine      |  
 | 7    | 🥴 Special     |  
-| 8    | 💎 Premium     |  
+| 8    | 💮 Exclusive     |  
 | 9    | 🔮 Limited     |  
 | 10   | 🍭 Cosplay     |  
 | 11   | 💋 Aura        |  

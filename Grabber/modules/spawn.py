@@ -45,7 +45,7 @@ async def spawn_character(chat_id):
             5: "🎐 Celestial",
             6: "🥵 Divine",
             7: "🥴 Special",
-            8: "💎 Premium",
+            8: "💮 Exclusive",
             9: "🔮 Limited",
         }
         allowed_rarities = [rarity_map[i] for i in range(1, 10)]
