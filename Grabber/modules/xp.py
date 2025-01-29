@@ -1,11 +1,13 @@
 from pyrogram import filters
 from Grabber import application, user_collection
-from . import app as bot
+from . import app as bot, BOT_USERNAME
 from pyrogram.types import Message
 from html import escape
 from telegram.ext import CommandHandler
 from .block import block_dec
-XP_PER_LEVEL = 40
+from .block import capsify
+from pyrogram.types import InlineKeyboardButton as IKB, InlineKeyboardMarkup as IKM
+XP_PER_LEVEL = 10
 
 LEVEL_TITLES = {
     (0, 10): "👤 Rokki",
@@ -27,7 +29,7 @@ def get_user_level_title(user_level):
     for level_range, title in LEVEL_TITLES.items():
         if level_range[0] <= user_level <= level_range[1]:
             return title
-    return "👤 Rokki"
+    return "👤 Hacker"
 
 @bot.on_message(filters.command(["xp"]))
 @block_dec
@@ -75,8 +77,9 @@ async def xtop(update, context):
         user_link = f"<a href='tg://user?id={user_id}'>{escape(first_name)}</a>"
         top_users_message += f"{i}. {user_link} - ({user.get('xp', 0):,.0f} xp)\n"
     
-    top_users_message += "────────────────────\nTop 10 Users via @Guess_Yourr_Waifu_bot"
-    photo_path = 'https://telegra.ph/file/0dd6484b96c63f06379ef.jpg'
-    await update.message.reply_photo(photo=photo_path, caption=top_users_message, parse_mode='HTML')
+    top_users_message += "────────────────────\nTop 10 Users via @Character_Grabber_Game_bot"
+    # photo_path = 'https://telegra.ph/file/0dd6484b96c63f06379ef.jpg'
+    # await update.message.reply_photo(photo=photo_path, caption=top_users_message, parse_mode='HTML')
+    await update.message.reply_text(top_users_message, parse_mode='HTML')
 
 application.add_handler(CommandHandler("xtop", xtop, block=False))

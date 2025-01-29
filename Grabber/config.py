@@ -14,6 +14,7 @@ api_hash = "efc605d197c57b8adbb77bed4c2dac01"
 PHOTO_URL = ["https://github.com/Gavan1312/Character-Grabber-Bot/blob/main/Images/bot-icon.jpg?raw=true%22%20data-hpc=%22true"]
 Video_Show_for_start = False
 SUPPORT_CHAT = "Gomu_Gomu_Syndicate"
+PLAY_CHAT = "Log_Pose_To_Laughtale"
 UPDATE_CHAT = "Nac_Updates_Group"
 HELP_CHAT = "Nac_Support_Group"
 BOT_USERNAME = "Character_Grabber_Game_bot"

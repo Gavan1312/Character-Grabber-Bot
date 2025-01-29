@@ -82,7 +82,8 @@ async def handle_marriage(client, message, receiver_id):
                 chat_id=message.chat.id,
                 photo=character['img_url'],
                 caption=caption,
-                reply_to_message_id=message.id
+                reply_to_message_id=message.id,
+                protect_content = True
             )
 
     except Exception as e:
@@ -114,7 +115,8 @@ async def handle_dice(client, message, receiver_id):
                     chat_id=message.chat.id,
                     photo=character['img_url'],
                     caption=caption,
-                    reply_to_message_id=message.id
+                    reply_to_message_id=message.id,
+                    protect_content = True
                 )
         else:
             await client.send_message(

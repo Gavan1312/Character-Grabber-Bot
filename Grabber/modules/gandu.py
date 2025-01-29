@@ -7,6 +7,7 @@ import time
 from . import add, deduct, show, sudb, app, gend_watcher
 from . import group_user_totals_collection
 from words import words
+from Grabber.config import *
 
 BG_IMAGE_PATH = "Images/blue.jpg"
 DEFAULT_MESSAGE_LIMIT = 30
@@ -103,7 +104,7 @@ async def handle_messages(client: Client, message):
         guess_start_time[chat_id] = time.time()
 
         keyboard = [
-            [IKB("Join", url="https://t.me/dragons_support")]
+            [(IKB("Join Support", url=f"https://t.me/{SUPPORT_CHAT}")),(IKB("Join to Play", url=f"https://t.me/{PLAY_CHAT}"))]
         ]
         reply_markup = IKM(keyboard)
 

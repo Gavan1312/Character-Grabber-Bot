@@ -36,7 +36,7 @@ async def suggestion_command(client, message):
                 photo=message.photo.file_id,
                 caption=f"{capsify('#new_suggestion')}\n{capsify(text)}\n{capsify('Status: pending...')}",
                 reply_markup=InlineKeyboardMarkup([
-                    [InlineKeyboardButton(capsify("Check Status"), url=f"https://t.me/dragons_support/{message.id}")]
+                    [InlineKeyboardButton(capsify("Check Status"), url=f"https://t.me/Gomu_Gomu_Syndicate/{message.id}")]
                 ])
             )
         else:
@@ -45,20 +45,20 @@ async def suggestion_command(client, message):
                 chat_id=SUGGESTION_CHANNEL_ID,
                 text=f"{capsify('#new_suggestion')}\n{capsify(text)}\n{capsify('Status: pending...')}",
                 reply_markup=InlineKeyboardMarkup([
-                    [InlineKeyboardButton(capsify("Check Status"), url=f"https://t.me/dragons_support/{message.id}")]
+                    [InlineKeyboardButton(capsify("Check Status"), url=f"https://t.me/Gomu_Gomu_Syndicate/{message.id}")]
                 ])
             )
 
         await message.reply(
             capsify(f"Your suggestion has been added! Please check the status using the button below."),
             reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton(capsify("Check Status"), url=f"https://t.me/okarun_suggestion/{sent_message.id}")]
+                [InlineKeyboardButton(capsify("Check Status"), url=f"https://t.me/Log_Pose_To_Laughtale/{sent_message.id}")]
             ])
         )
     else:
         await message.reply(
             capsify("You can only submit suggestions in the official suggestions group."),
             reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton(capsify("here"), url="https://t.me/dragons_support")]
+                [InlineKeyboardButton(capsify("here"), url="https://t.me/Gomu_Gomu_Syndicate")]
             ])
         )

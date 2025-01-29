@@ -3,7 +3,8 @@ from pyrogram import filters
 from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
 from pyrogram.enums import ChatAction
 from . import app
-from .block import block_dec
+from .block import *
+from Grabber.config import * 
 
 @app.on_message(filters.command("cosplay"))
 @block_dec 
@@ -16,10 +17,11 @@ async def cosplay(_, msg):
 
     DRAGONS = [
         [
-            InlineKeyboardButton(text="ᴀᴅᴅ ᴍᴇ ʙᴀʙʏ", url=f"https://t.me/{bot_username}?startgroup=true"),
+            InlineKeyboardButton(text="ᴀᴅᴅ ᴍᴇ ʙᴀʙʏ!", url=f"https://t.me/{bot_username}?startgroup=true"),
+            InlineKeyboardButton(text="ᴊᴏɪɴ ɢʀᴏᴜᴘ", url=f"https://t.me/{SUPPORT_CHAT}"),
         ],
     ]
 
     img = requests.get("https://waifu-api.vercel.app").json()
-    await msg.reply_photo(img, caption=f"❅ ᴄᴏsᴘʟᴀʏ ʙʏ ➠ ๛ᴅ ʀ ᴀ ɢ ᴏ ɴ s ༗", reply_markup=InlineKeyboardMarkup(DRAGONS))
+    await msg.reply_photo(img, caption=f"❅ ᴄᴏsᴘʟᴀʏ ʙʏ ➠ ๛𝓛𝓪𝓾𝓰𝓱𝓽𝓪𝓵𝓮 𝓜𝓮𝓶𝓫𝓮𝓻𝓼 ༗", reply_markup=InlineKeyboardMarkup(DRAGONS))
 

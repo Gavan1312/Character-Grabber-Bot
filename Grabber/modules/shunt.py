@@ -7,8 +7,9 @@ from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from motor.motor_asyncio import AsyncIOMotorClient
 from . import user_collection, app, dev_filter
 from .block import block_dec, temp_block
+from Grabber.config import *
 
-MUST_JOIN = "dragons_support"
+MUST_JOIN = PLAY_CHAT
 cooldown_duration_shunt = 60
 
 dungeon_sets = {

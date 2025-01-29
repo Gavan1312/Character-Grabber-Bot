@@ -26,7 +26,7 @@ async def check_auction_trigger(_, message):
     if not chat_modes.get('auction', True):
         return
     auction_message_counts[chat_id] = auction_message_counts.get(chat_id, 0) + 1
-    if auction_message_counts[chat_id] >= 200:
+    if auction_message_counts[chat_id] >= 150:
         success = await start_auction(chat_id)
         if success:
             auction_message_counts[chat_id] = 0

@@ -74,18 +74,17 @@ async def harem(client, message, page=0):
             nav_buttons.append(IKB(capsify("➡"), callback_data=f"harem:{page + 1}:{user_id}"))
         keyboard.append(nav_buttons)
 
+        # Skip buttons (5 pages ahead/back)
         skip_buttons = []
         skip_buttons.append(inline_user)
         if page > 4:
             skip_buttons.append(IKB(capsify("x5⬅"), callback_data=f"harem:{page - 5}:{user_id}"))
         if page < total_pages - 5:
             skip_buttons.append(IKB(capsify("➡5x"), callback_data=f"harem:{page + 5}:{user_id}"))
-            
-        # keyboard.append(skip_buttons)
+        keyboard.append(skip_buttons)
 
-        # close_button = [(inline_user),(skip_buttons),(IKB(capsify("🗑️"), callback_data=f"harem:close_{user_id}"))]
-        skip_buttons.append((IKB(capsify("🗑️"), callback_data=f"harem:close_{user_id}")))
-        close_button = skip_buttons
+        # Close button
+        close_button = [IKB(capsify("🗑️"), callback_data=f"harem:close_{user_id}")]
         keyboard.append(close_button)
 
     markup = IKM(keyboard)
@@ -100,7 +99,8 @@ async def harem(client, message, page=0):
                 photo=fav_character['img_url'],
                 caption=harem_message,
                 reply_markup=markup,
-                reply_to_message_id=message.id
+                reply_to_message_id=message.id,
+                protect_content = True
             )
             return
 
@@ -193,19 +193,18 @@ async def harem_callback(client, callback_query):
         if page < total_pages - 1:
             nav_buttons.append(IKB(capsify("➡"), callback_data=f"harem:{page + 1}:{user_id}"))
         keyboard.append(nav_buttons)
-
+        
+        # Skip buttons (5 pages ahead/back)
         skip_buttons = []
         skip_buttons.append(inline_user)
         if page > 4:
             skip_buttons.append(IKB(capsify("x5⬅"), callback_data=f"harem:{page - 5}:{user_id}"))
         if page < total_pages - 5:
             skip_buttons.append(IKB(capsify("➡5x"), callback_data=f"harem:{page + 5}:{user_id}"))
-            
-        # keyboard.append(skip_buttons)
+        keyboard.append(skip_buttons)
 
-        # close_button = [(inline_user),(skip_buttons),(IKB(capsify("🗑️"), callback_data=f"harem:close_{user_id}"))]
-        skip_buttons.append((IKB(capsify("🗑️"), callback_data=f"harem:close_{user_id}")))
-        close_button = skip_buttons
+        # Close button
+        close_button = [IKB(capsify("🗑️"), callback_data=f"harem:close_{user_id}")]
         keyboard.append(close_button)
 
     markup = IKM(keyboard)

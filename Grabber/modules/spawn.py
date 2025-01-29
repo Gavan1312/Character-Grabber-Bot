@@ -6,6 +6,8 @@ from . import collection, user_collection, group_user_totals_collection, top_glo
 from asyncio import Lock
 from .watchers import character_watcher
 from .block import temp_block, block_dec, block_cbq
+from Grabber.config import *
+from pyrogram.types import InlineKeyboardButton as IKB, InlineKeyboardMarkup as IKM
 
 message_counts = {}
 spawn_locks = {}
@@ -54,20 +56,29 @@ async def spawn_character(chat_id):
             return False
         character = random.choice(all_characters)
         spawned_characters[chat_id] = character
-        keyboard = [[InlineKeyboardButton(capsify("NAME"), callback_data=f"name_{character['id']}")]]
-        markup = InlineKeyboardMarkup(keyboard)
+        # keyboard = [[InlineKeyboardButton(capsify("NAME"), callback_data=f"name_{character['id']}")]]
+        # markup = InlineKeyboardMarkup(keyboard)
+        # caption = (
+        #     f"{capsify('{character["rarity"]} CHARACTER HAS APPEARED!')} 🌟\n"
+        #     f"{capsify('USE ')}/grab {capsify('(NAME) TO CLAIM IT.')}\n\n"
+        #     # f"💰 {capsify('PRICE')}: {character['price']} {capsify('COINS')}\n"
+        #     # f"{capsify('💰 NOTE')}: {capsify('100 COINS WILL BE DEDUCTED FOR CLICKING NAME')}."
+        # )
+        rarity_text = f"{character['rarity']} WAIFU HAS APPEARED!"
         caption = (
-            f"🌟 {capsify('A NEW CHARACTER HAS APPEARED!')} 🌟\n"
-            f"{capsify('USE ')}/pick {capsify('(NAME) TO CLAIM IT.')}\n\n"
-            f"💰 {capsify('PRICE')}: {character['price']} {capsify('COINS')}\n"
-            f"{capsify('💰 NOTE')}: {capsify('100 COINS WILL BE DEDUCTED FOR CLICKING NAME')}."
+            f"{capsify(rarity_text)} 🌟\n"
+            f"{capsify('USE ')}/grab {capsify('(NAME) TO CLAIM IT.')}\n\n"
+            # f"💰 {capsify('PRICE')}: {character['price']} {capsify('COINS')}\n"
+            # f"{capsify('💰 NOTE')}: {capsify('100 COINS WILL BE DEDUCTED FOR CLICKING NAME')}."
         )
+
         await app.send_photo(
             chat_id=chat_id,
             photo=character['img_url'],
             caption=caption,
-            reply_markup=markup,
-            has_spoiler=True
+            # reply_markup=markup,
+            # has_spoiler=True
+            protect_content=True,
         )
         asyncio.create_task(remove_spawn_after_timeout(chat_id, character, timeout=300))
         return True
@@ -79,11 +90,12 @@ async def remove_spawn_after_timeout(chat_id, character, timeout):
         await app.send_photo(
             chat_id,
             photo=character['img_url'],
+            protect_content = True,
             caption=capsify(
                 f"❌ OOPS, THE CHARACTER JUST ESCAPED! 🏃‍♀️\n\n"
-                f"👤 {capsify('NAME')}: {character['name']}\n"
-                f"📺 {capsify('ANIME')}: {character['anime']}\n"
-                f"⭐ {capsify('RARITY')}: {character['rarity']}\n"
+                f"🏵 {capsify('NAME')}: {character['name']}\n"
+                f"🎇 {capsify('RARITY')}: {character['rarity']}\n"
+                f"👀 {capsify('SOURCE')}: {character['anime']}\n"
                 f"🆔 {capsify('ID')}: {character['id']}\n\n"
                 f"🌌 {capsify('BETTER LUCK NEXT TIME!')} 🌌"
             ),
@@ -91,28 +103,41 @@ async def remove_spawn_after_timeout(chat_id, character, timeout):
         )
         del spawned_characters[chat_id]
 
-@app.on_message(filters.command("pick"))
+@app.on_message(filters.command("grab"))
 @block_dec
 async def guess(_, message):
     chat_id = message.chat.id
     user_id = message.from_user.id
+    user_data = await user_collection.find_one({'id': user_id})
+    
+    if not user_data or filters.user(OWNER_ID):
+        # return await message.reply_text("You need to start the bot first.")
+        return await message.reply_text(
+            capsify("🚀 You need to start the bot first. in DM."),
+            reply_markup=IKM([
+                [IKB(capsify("Start in DM"), url=f"https://t.me/{BOT_USERNAME}?start=start")]
+            ])
+        )
     if chat_id not in chat_locks:
         chat_locks[chat_id] = Lock()
     async with chat_locks[chat_id]:
         args = message.text.split(maxsplit=1)[1] if len(message.text.split()) > 1 else None
         if not args or "()" in args or "&" in args:
-            await message.reply_text(capsify("❌ INVALID INPUT. PLEASE AVOID USING SYMBOLS LIKE '()' OR '&'."))
+            # await message.reply_text(capsify("❌ INVALID INPUT. PLEASE AVOID USING SYMBOLS LIKE '()' OR '&'."))
             return
         guess = args.strip().lower()
         if chat_id not in spawned_characters:
-            await message.reply_text(capsify("❌ NO CHARACTER HAS SPAWNED YET. PLEASE WAIT FOR THE NEXT SPAWN."))
+            # await message.reply_text(capsify("❌ NO CHARACTER HAS SPAWNED YET. PLEASE WAIT FOR THE NEXT SPAWN."))
             return
         character = spawned_characters[chat_id]
         character_name = character['name'].strip().lower()
         name_parts = character_name.split()
         if guess not in name_parts:
+            # await message.reply_text(
+            #     capsify(f"❌ INCORRECT NAME. '{guess.upper()}' DOES NOT MATCH ANY PART OF THE CHARACTER'S NAME.")
+            # )
             await message.reply_text(
-                capsify(f"❌ INCORRECT NAME. '{guess.upper()}' DOES NOT MATCH ANY PART OF THE CHARACTER'S NAME.")
+                capsify(f"❌ INCORRECT NAME.")
             )
             return
         character_price = character['price']
@@ -120,7 +145,7 @@ async def guess(_, message):
         # if user_balance < character_price:
         temp_true_variable = False
         if temp_true_variable == True:
-            await message.reply_text(capsify("❌ NOT ENOUGH COINS TO CLAIM THIS CHARACTER."))
+            await message.reply_text(capsify("❌ NOT ENOUGH COINS TO GRAB THIS CHARACTER."))
             return
         await user_collection.update_one({'id': user_id}, {'$push': {'characters': character}})
         # await deduct(user_id, character_price)
@@ -137,12 +162,12 @@ async def guess(_, message):
         keyboard = [[InlineKeyboardButton(capsify("CHECK HAREM"), switch_inline_query_current_chat=f"collection.{user_id}")]]
         await message.reply_text(
             capsify(
-                f"🎊 CONGRATULATIONS, {message.from_user.first_name}! 🎊\n"
-                f"YOU'VE CLAIMED A NEW CHARACTER! 🎉\n\n"
-                f"👤 NAME: {character['name']}\n"
-                f"📺 ANIME: {character['anime']}\n"
-                f"⭐ RARITY: {character['rarity']}\n\n"
-                "👉 CHECK YOUR HAREM NOW!"
+                f"✅ {message.from_user.first_name}, you got a new waifu\n\n"
+                f"🏵 NAME: {character['name']}\n"
+                f"🎇 RARITY: {character['rarity']}\n"
+                f"👀 SOURCE : {character['anime']}\n"
+                f"🆔 ID: {character['id']}\n"
+                # "👉 CHECK YOUR HAREM NOW!"
             ),
             reply_markup=InlineKeyboardMarkup(keyboard)
         )

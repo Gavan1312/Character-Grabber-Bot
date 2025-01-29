@@ -23,11 +23,11 @@ async def details(update: Update, context: CallbackContext) -> None:
 
         caption = (
             f"{capsify('Character Details')}\n"
-            f"🌟 {capsify('Name')}: {character['name']}\n"
-            f"📺 {capsify('Anime')}: {character['anime']}\n"
-            f"🌟 {capsify('Rarity')}: {rarity}\n"
+            f"🏵 {capsify('Name')}: {character['name']}\n"
+            f"🎇 {capsify('Rarity')}: {rarity}\n"
+            f"👀 {capsify('SOURCE')}: {character['anime']}\n"
             f"🆔 {capsify('ID')}: {character['id']}\n"
-            f"💰 {capsify('Price')}: {price} coins\n\n"
+            # f"💰 {capsify('Price')}: {price} coins\n\n"
             f"📊 {capsify('Owned by')}: {global_count} users"
         )
 
@@ -61,4 +61,4 @@ async def check(update: Update, context: CallbackContext) -> None:
     else:
         await query.answer(capsify("You have 0 of this character."), show_alert=True)
 
-application.add_handler(CommandHandler('p', details, block=False))
+application.add_handler(CommandHandler('view_character', details, block=False))
