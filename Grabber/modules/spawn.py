@@ -67,7 +67,7 @@ async def spawn_character(chat_id):
         rarity_text = f"{character['rarity']} WAIFU HAS APPEARED!"
         caption = (
             f"{capsify(rarity_text)} 🌟\n"
-            f"{capsify('USE ')}/grab {capsify('(NAME) TO CLAIM IT.')}\n\n"
+            f"{capsify('USE ')}/grab {capsify('NAME TO ADD INTO YOUR HAREM.')}\n\n"
             # f"💰 {capsify('PRICE')}: {character['price']} {capsify('COINS')}\n"
             # f"{capsify('💰 NOTE')}: {capsify('100 COINS WILL BE DEDUCTED FOR CLICKING NAME')}."
         )
@@ -110,7 +110,7 @@ async def guess(_, message):
     user_id = message.from_user.id
     user_data = await user_collection.find_one({'id': user_id})
     
-    if not user_data or filters.user(OWNER_ID):
+    if not user_data:
         # return await message.reply_text("You need to start the bot first.")
         return await message.reply_text(
             capsify("🚀 You need to start the bot first. in DM."),
@@ -159,7 +159,7 @@ async def guess(_, message):
             {'$inc': {'count': 1}, '$set': {'group_name': message.chat.title}},
             upsert=True
         )
-        keyboard = [[InlineKeyboardButton(capsify("CHECK HAREM"), switch_inline_query_current_chat=f"collection.{user_id}")]]
+        keyboard = [[InlineKeyboardButton(capsify("🌐 HAREM"), switch_inline_query_current_chat=f"collection.{user_id}")]]
         await message.reply_text(
             capsify(
                 f"✅ {message.from_user.first_name}, you got a new waifu\n\n"
