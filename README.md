@@ -52,6 +52,29 @@ use Rarity Number accordingly rarity Map
 | 13   | ⚡ Drip        |  
 | 14   | 🍥 Retro       |
 
+## Levels
+New Levels
+
+1️⃣ (0, 10) "💫 Novice"
+New to the world of love and affection.
+2️⃣ (11, 30) "✨ Dreamer"
+A heart full of potential and desires.
+3️⃣ (31, 50) "⚡️ Spark"
+Electric chemistry, igniting passions.
+4️⃣ (51, 75) "🔥 Fiery"
+Burning with determination and love.
+5️⃣ (76, 100) "💖 Knight"
+A protector of hearts, always devoted.
+6️⃣ (101, 125) "🏆 Champion"
+Champion of hearts, admired by all.
+7️⃣ (126, 150) "🛡 Guardian"
+A gentle guardian, shielding love with care.
+8️⃣ (151, 175) "🏅 Hero"
+A true hero, winning hearts with kindness.
+9️⃣ (176, 200) "👑 Emperor"
+Ruler of hearts, commanding affection.
+🔟 (201, 2000) "🏰 Sovereign"
+The supreme ruler of love, cherished by all.
 
 ## User Commands  
 

@@ -1,9 +1,10 @@
-"""from pyrogram import Client, filters
+from pyrogram import Client, filters
 from pyrogram.types import Message
 from datetime import datetime, timedelta
 from Grabber import application, user_collection
 import random
 from . import app, user_collection, collection, add, deduct, show, capsify
+from .xp import add_xp, deduct_xp
 
 COOLDOWN_DURATION = 60
 COMMAND_BAN_DURATION = 600
@@ -36,7 +37,7 @@ async def random_daily_reward(client, message):
 
     await deduct(user_id, crime_fee)
 
-    random_reward = random.randint(6000, 10000)
+    random_reward = random.randint(6000, 30000)
 
     congratulatory_messages = [
         "Explore a dungeon",
@@ -49,11 +50,67 @@ async def random_daily_reward(client, message):
     random_message = random.choice(congratulatory_messages)
 
     await add(user_id, random_reward)
+    await add_xp(user_id, 2)
     last_command_time[user_id] = datetime.utcnow()
     user_cooldowns[user_id] = datetime.utcnow()
 
-    await message.reply_text(capsify(f"You {random_message} and got {random_reward} tokens.🤫"))
+    await message.reply_text(capsify(f"You {random_message} and got {random_reward} coins.🤫"))
 
 @app.on_message(filters.command("explore") & filters.group)
 async def explore_command(client, message):
-    await random_daily_reward(client, message)"""
+    await random_daily_reward(client, message)
+
+
+CRIME_COOLDOWN_DURATION = 60
+CRIME_COMMAND_BAN_DURATION = 600
+
+crime_last_command_time = {}
+crime_user_cooldowns = {}
+
+async def random_daily_reward_crime(client, message):
+    if message.chat.type == "private":
+        await message.reply_text(capsify("This command can only be used in group chats."))
+        return
+
+    user_id = message.from_user.id
+
+    if message.reply_to_message:
+        await message.reply_text(capsify("Fuck Looted a orc den and got 10000 tokens.⚡"))
+        return
+
+    if user_id in crime_user_cooldowns and (datetime.utcnow() - crime_user_cooldowns[user_id]) < timedelta(seconds=CRIME_COOLDOWN_DURATION):
+        remaining_time = CRIME_COOLDOWN_DURATION - (datetime.utcnow() - crime_user_cooldowns[user_id]).total_seconds()
+        await message.reply_text(capsify(f"You must wait {int(remaining_time)} seconds before using crime again."))
+        return
+
+    user_balance = await show(user_id)
+    crime_fee = 300
+
+    if user_balance < crime_fee:
+        await message.reply_text(capsify("Bc You need at least 500 tokens to use crime."))
+        return
+
+    await deduct(user_id, crime_fee)
+
+    random_reward = random.randint(6000, 30000)
+
+    congratulatory_messages = [
+        "Stole From a Kid",
+        "Got beaten by a Lady",
+        "Robbed an old man",
+        "Stole from own house",
+        "Lie about your money",
+        "Tried to talk with a girl"
+    ]
+    random_message = random.choice(congratulatory_messages)
+
+    await add(user_id, random_reward)
+    await add_xp(user_id, 2)
+    crime_last_command_time[user_id] = datetime.utcnow()
+    crime_user_cooldowns[user_id] = datetime.utcnow()
+
+    await message.reply_text(capsify(f"You {random_message} and got {random_reward} coins.🤫"))
+
+@app.on_message(filters.command("crime") & filters.group)
+async def crime_command(client, message):
+    await random_daily_reward_crime(client, message)
