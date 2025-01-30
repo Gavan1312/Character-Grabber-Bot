@@ -6,6 +6,7 @@ from pyrogram import Client
 from Grabber import user_collection
 from . import add, deduct, show, app
 from .block import block_dec, temp_block
+from .xp import add_xp, deduct_xp
 
 cooldown_duration_roll = 600
 last_usage_time_roll = {}
@@ -19,7 +20,7 @@ async def roll_dart(client: Client, message: t.Message):
     current_time = time.time()
 
     if not await user_collection.find_one({'id': user_id}):
-        await message.reply("You need to grab some slave first.")
+        await message.reply("You need to grab some characters first.")
         return
 
     command_parts = message.text.split()
@@ -27,7 +28,7 @@ async def roll_dart(client: Client, message: t.Message):
         return await message.reply_text("Invalid command.\nUsage: /lever 99999")
 
     try:
-        slot_amount = int(command_parts[1])
+        slot_amount = int(command_parts[1].replace(',', ''))
     except ValueError:
         return await message.reply_text("Invalid amount.")
 
@@ -38,14 +39,14 @@ async def roll_dart(client: Client, message: t.Message):
     if slot_amount > bal:
         return await message.reply_text("Insufficient cash to place this bet.")
 
-    min_bet_amount = int(bal * 0.07)
+    min_bet_amount = int(bal * 0.05)
 
     if slot_amount < min_bet_amount:
-        return await message.reply_text(f"Please bet at least 7% of your balance, which is ₳{min_bet_amount}.")
+        return await message.reply_text(f"Please bet at least 5% of your Love Points, which is ₳{min_bet_amount}.")
 
     max_bet_amount = int(bal * 0.4)
     if slot_amount > max_bet_amount:
-        return await message.reply_text(f"Can't bet more than 40% of your balance, which is ₳{max_bet_amount}.")
+        return await message.reply_text(f"Can't bet more than 40% of your Love Points, which is ₳{max_bet_amount}.")
 
     if user_id in last_usage_time_roll:
         time_elapsed = current_time - last_usage_time_roll[user_id]
@@ -76,10 +77,4 @@ async def roll_dart(client: Client, message: t.Message):
     else:
         await deduct(user_id, slot_amount)
         await message.reply_text(f"[🍷] Nothing got matched!\nYou lost ₳{slot_amount}.")
-        await deduct_xp(user_id, 2)
-
-async def add_xp(user_id, xp_amount):
-    await user_collection.update_one({'id': user_id}, {'$inc': {'xp': xp_amount}}, upsert=True)
-
-async def deduct_xp(user_id, xp_amount):
-    await user_collection.update_one({'id': user_id}, {'$inc': {'xp': -xp_amount}}, upsert=True)
+        # await deduct_xp(user_id, 2)

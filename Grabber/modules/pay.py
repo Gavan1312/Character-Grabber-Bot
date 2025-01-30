@@ -33,7 +33,7 @@ async def mpay(client, message):
         return
 
     try:
-        amount = int(message.text.split()[1])
+        amount = int(message.text.split()[1].replace(',', ''))
         if amount <= 0:
             raise ValueError("Amount must be greater than zero.")
     except (IndexError, ValueError):
@@ -42,7 +42,7 @@ async def mpay(client, message):
 
     sender_balance = await show(sender_id)
     if not sender_balance or sender_balance < amount:
-        await message.reply_text(capsify("Insufficient balance to make the payment."))
+        await message.reply_text(capsify("Insufficient Love Points to make the payment."))
         return
 
     last_payment_time = last_payment_times.get(sender_id)
@@ -63,5 +63,5 @@ async def mpay(client, message):
 
     await client.send_message(
         message.chat.id,
-        capsify(f"Payment Successful! You Paid Ŧ{amount} Tokens to {recipient_name}.")
+        capsify(f"Payment Successful! You Paid Ŧ{amount} Love Points to {recipient_name}.")
     )

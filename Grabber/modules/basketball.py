@@ -5,6 +5,7 @@ from pyrogram import Client
 from Grabber import application, user_collection
 from . import add, deduct, show, app
 from .block import block_dec
+from .xp import add_xp, deduct_xp
 
 cooldown_duration_roll = 30
 last_usage_time_roll = {}
@@ -18,7 +19,7 @@ async def roll_dart(client: Client, message: t.Message):
     current_time = time.time()
 
     if not await user_collection.find_one({'id': user_id}):
-        await message.reply("You need to grab some slave first.")
+        await message.reply("You need to grab some characters first.")
         return
 
     if user_id in last_usage_time_roll:
@@ -32,20 +33,20 @@ async def roll_dart(client: Client, message: t.Message):
         return await message.reply_text("Invalid command.\nUsage: /basket 10000")
 
     try:
-        bastek_amount = int(command_parts[1])
+        bastek_amount = int(command_parts[1].replace(',', ''))
     except ValueError:
         return await message.reply_text("Invalid amount.")
 
     bal = await show(user_id)
     if bal is None:
-        return await message.reply_text("You don't have enough cash to place this bet.")
+        return await message.reply_text("You don't have enough Love Points to place this bet.")
 
     if bastek_amount > bal:
-        return await message.reply_text("Insufficient balance to place this bet.")
+        return await message.reply_text("Insufficient Love Points to place this bet.")
 
-    min_bet_amount = int(bal * 0.07)
+    min_bet_amount = int(bal * 0.05)
     if bastek_amount < min_bet_amount:
-        return await message.reply_text(f"Please bet at least 7% of your balance, which is ₩{min_bet_amount}.")
+        return await message.reply_text(f"Please bet at least 5% of your Love Points, which is ₩{min_bet_amount}.")
 
     value = await client.send_dice(chat_id=message.chat.id, emoji="🏀")
 
@@ -57,12 +58,6 @@ async def roll_dart(client: Client, message: t.Message):
     else:
         await deduct(user_id, bastek_amount)
         await message.reply_text(f"[🍷] Better luck next time!\nYou lost ₩{bastek_amount}")
-        await deduct_xp(user_id, 2)
+        # await deduct_xp(user_id, 2)
 
     last_usage_time_roll[user_id] = current_time
-
-async def add_xp(user_id, xp_amount):
-    await user_collection.update_one({'id': user_id}, {'$inc': {'xp': xp_amount}}, upsert=True)
-
-async def deduct_xp(user_id, xp_amount):
-    await user_collection.update_one({'id': user_id}, {'$inc': {'xp': -xp_amount}}, upsert=True)
