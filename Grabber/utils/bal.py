@@ -101,3 +101,9 @@ async def sgold(user_id):
     if x:
         return int(x.get("gold", 0))
     return 0
+
+async def sfirstname(user_id):
+    x = await user_collection.find_one({"id": user_id})
+    if x:
+        return str(x.get("first_name", 'User'))
+    return 0
