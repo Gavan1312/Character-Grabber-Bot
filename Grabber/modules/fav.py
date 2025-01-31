@@ -1,9 +1,12 @@
 import asyncio
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton as IKB, InlineKeyboardMarkup as IKM, Message, CallbackQuery
+from Grabber.config import GROUP_ID
 
 from . import user_collection, app, capsify
 from .block import block_dec, block_cbq, temp_block
+
+group_id_to_use_for_log = int(GROUP_ID)
 
 @app.on_message(filters.command("fav"))
 @block_dec
@@ -27,7 +30,7 @@ async def fav(client: Client, message: Message):
         await message.reply_text(capsify('This Waifu is not in your collection🙄'))
         return
 
-    if message.chat.id == -1002225496870:
+    if message.chat.id == group_id_to_use_for_log:
         await handle_confirmation(user_id, character_id, character)
     else:
         # Send the image with confirmation buttons in a single message
@@ -75,11 +78,14 @@ async def button(client: Client, callback_query: CallbackQuery):
         await callback_query.answer("This is not for you baka ❗", show_alert=True)
         return
 
-    if callback_query.message.chat.id == -1002225496870:
+    # Delete the original message containing the image and buttons
+    await callback_query.message.delete()
+
+    if callback_query.message.chat.id == group_id_to_use_for_log:
         if action == "confirm":
             await handle_confirmation(user_id, character_id)
         else:
-            await callback_query.message.edit_text(capsify('Operation canceled.'))
+            await app.send_message(user_id, capsify('Operation canceled.'))
     else:
         if action == "confirm":
             user = await user_collection.find_one({'id': user_id})
@@ -88,10 +94,10 @@ async def button(client: Client, callback_query: CallbackQuery):
                 if character:
                     user['favorites'] = [character_id]
                     await user_collection.update_one({'id': user_id}, {'$set': {'favorites': user['favorites']}})
-                    await callback_query.message.edit_text(capsify(f'Waifu {character["name"]} is your favorite now...'))
+                    await app.send_message(user_id, capsify(f'Waifu {character["name"]} is your favorite now...'))
                 else:
-                    await callback_query.message.edit_text(capsify('This Waifu is not present in your Collection 🙄'))
+                    await app.send_message(user_id, capsify('This Waifu is not present in your Collection 🙄'))
             else:
-                await callback_query.message.edit_text(capsify('You have not got any Waifus yet...😣'))
+                await app.send_message(user_id, capsify('You have not got any Waifus yet...😣'))
         elif action == "cancel":
-            await callback_query.message.edit_text(capsify('Operation canceled.'))
+            await app.send_message(user_id, capsify('Operation canceled.'))
