@@ -104,7 +104,7 @@ async def handle_messages(client: Client, message):
         guess_start_time[chat_id] = time.time()
 
         keyboard = [
-            [(IKB("Join Support", url=f"https://t.me/{SUPPORT_CHAT}")),(IKB("Join to Play", url=f"https://t.me/{PLAY_CHAT}"))]
+            [(IKB("Support", url=f"https://t.me/{SUPPORT_CHAT}")),(IKB("Play", url=f"https://t.me/{PLAY_CHAT}"))]
         ]
         reply_markup = IKM(keyboard)
 

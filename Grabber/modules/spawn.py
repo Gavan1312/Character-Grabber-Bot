@@ -163,10 +163,10 @@ async def guess(_, message):
         await message.reply_text(
             capsify(
                 f"✅ {message.from_user.first_name}, you got a new waifu\n\n"
-                f"🏵 NAME: {character['name']}\n"
-                f"🎇 RARITY: {character['rarity']}\n"
-                f"👀 SOURCE : {character['anime']}\n"
-                f"🆔 ID: {character['id']}\n"
+                f"**🏵 NAME:** {character['name']}\n"
+                f"*🎇 RARITY:** {character['rarity']}\n"
+                f"*👀 SOURCE :* {character['anime']}\n"
+                f"*🆔 ID:* {character['id']}\n"
                 # "👉 CHECK YOUR HAREM NOW!"
             ),
             reply_markup=InlineKeyboardMarkup(keyboard)
