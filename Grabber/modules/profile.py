@@ -72,8 +72,8 @@ async def xprofile(client, message):
                 f"PROFILE\n\n"
                 f"Name: {message.from_user.first_name or ''} {message.from_user.last_name or ''} [{gender_icon}]\n"
                 f"ID: `{user_id}`\n\n"
-                f"Coins: Ŧ`{custom_format_number(balance_amount)}`\n"
-                f"Bank: Ŧ`{custom_format_number(bank_balance)}`\n"
+                f"Coins: {currency_symbols['balance']}`{custom_format_number(balance_amount)}`\n"
+                f"Bank: {currency_symbols['balance']}`{custom_format_number(bank_balance)}`\n"
                 f"Characters: `{total_characters}/{total_database_characters}`\n"
                 f"Days Old: `{days_old}`\n"
             )

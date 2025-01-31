@@ -3,6 +3,7 @@ from pyrogram import Client, filters
 from Grabber import user_collection
 from . import add, deduct, show, abank, dbank, sbank, app, capsify
 from .block import block_dec, temp_block
+from Grabber.config_settings import *
 
 @app.on_message(filters.command("gamble"))
 @block_dec
@@ -31,22 +32,22 @@ async def gamble(client, message):
 
     min_bet = int(balance * 0.05)
     if amount < min_bet:
-        await message.reply_text(capsify(f"Please gamble at least 5% of your Love Points, which is Ŧ{min_bet}."))
+        await message.reply_text(capsify(f"Please gamble at least 5% of your Love Points, which is {currency_symbols['balance']}{min_bet}."))
         return
 
     if amount > balance:
-        await message.reply_text(capsify(f"You do not have enough Love Points to gamble Ŧ{amount}. Your current Love Points are Ŧ{balance}."))
+        await message.reply_text(capsify(f"You do not have enough Love Points to gamble {currency_symbols['balance']}{amount}. Your current Love Points are {currency_symbols['balance']}{balance}."))
         return
 
     # Winning chance is now 10 out of 100
     if random.randint(1, 100) <= 10:  # 10% chance to win
         coin_side = choice
         new_balance = amount  # Amount to add
-        message_text = capsify(f"🤩 You chose {choice} and won Ŧ{amount}.\nCoin was in {coin_side} hand.")
+        message_text = capsify(f"🤩 You chose {choice} and won {currency_symbols['balance']}{amount}.\nCoin was in {coin_side} hand.")
     else:
         coin_side = 'l' if choice == 'r' else 'r'
         new_balance = -amount  # Amount to deduct
-        message_text = capsify(f"🥲 You chose {choice} and lost Ŧ{amount}.\nCoin was in {coin_side} hand.")
+        message_text = capsify(f"🥲 You chose {choice} and lost {currency_symbols['balance']}{amount}.\nCoin was in {coin_side} hand.")
 
     await add(user_id, new_balance)
 
@@ -82,22 +83,22 @@ async def gamble(client, message):
 
     min_bet = int(balance * 0.05)
     if amount < min_bet:
-        await message.reply_text(capsify(f"Please bet at least 5% of your Love Points, which is Ŧ{min_bet}."))
+        await message.reply_text(capsify(f"Please bet at least 5% of your Love Points, which is {currency_symbols['balance']}{min_bet}."))
         return
 
     if amount > balance:
-        await message.reply_text(capsify(f"You do not have enough Love Points to bet {amount}. Your current Love Points are Ŧ{balance}."))
+        await message.reply_text(capsify(f"You do not have enough Love Points to bet {amount}. Your current Love Points are {currency_symbols['balance']}{balance}."))
         return
 
     # Winning chance is now 10 out of 100
     if random.randint(1, 100) <= 10:  # 10% chance to win
         coin_side = choice
         new_balance = amount  # Amount to add
-        message_text = capsify(f"🤩 You chose {choice} and won Ŧ{amount}.\nCoin fell on {coin_side} side.")
+        message_text = capsify(f"🤩 You chose {choice} and won {currency_symbols['balance']}{amount}.\nCoin fell on {coin_side} side.")
     else:
         coin_side = 'h' if choice == 't' else 't'
         new_balance = -amount  # Amount to deduct
-        message_text = capsify(f"🥲 You chose {choice} and lost Ŧ{amount}.\nCoin feel on {coin_side} side.")
+        message_text = capsify(f"🥲 You chose {choice} and lost {currency_symbols['balance']}{amount}.\nCoin feel on {coin_side} side.")
 
     await add(user_id, new_balance)
 
