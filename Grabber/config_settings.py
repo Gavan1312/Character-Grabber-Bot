@@ -1,6 +1,20 @@
 currency_symbols = {
-    "xp": "Level ",        # XP - Stylized X
-    "balance": "Ƀ",   # Balance - Bitcoin-like B
-    "gold": "𝒢",      # Gold - Fancy G
-    "rubies": "Ⓡ"     # Rubies - Circled R
+    "xp": "Level ",        
+    "balance": "Ƀ",   
+    "gold": "𝒢",      
+    "rubies": "Ⓡ"     
+}
+
+currency_names = {
+    "xp": "Level ",        
+    "balance": "Love Point",   
+    "gold": "Gold",      
+    "rubies": "Ruby"     
+}
+
+currency_names_plural = {
+    "xp": "Level ",        
+    "balance": "Love Points",   
+    "gold": "Gold",     
+    "rubies": "Rubies"    
 }

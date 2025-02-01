@@ -24,8 +24,8 @@ support_buttons = [
      IKB(capsify("Updates"), url=f"https://t.me/{UPDATE_CHAT}")],
     [IKB(capsify("Add Me Baby 🐥"), url=f"https://t.me/{BOT_USERNAME}?startgroup=true"),
      IKB(capsify("Database"), url=f"https://t.me/{DATABASE_CHANNEL_ID}")],
-    [IKB(capsify("Help"), url=f"https://t.me/{HELP_CHAT}"),
-     IKB(capsify("Credits"), callback_data="credits")]
+    [IKB(capsify("Help"), url=f"https://t.me/{HELP_CHAT}")]
+    #  IKB(capsify("Credits"), callback_data="credits")]
 ]
 
 @app.on_message(filters.command("start") & filters.private)
