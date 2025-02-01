@@ -4,14 +4,9 @@ from pyrogram.types import InlineKeyboardButton as IKB, InlineKeyboardMarkup as 
 from . import app, collection, user_collection, capsify 
 from .profile import custom_format_number
 from .block import block_dec, temp_block, block_cbq
+from Grabber.config_settings import *
 
 XP_PER_LEVEL = 10
-currency_symbols = {
-    "xp": "Level ",        # XP - Stylized X
-    "balance": "Ƀ",   # Balance - Bitcoin-like B
-    "gold": "𝒢",      # Gold - Fancy G
-    "rubies": "Ⓡ"     # Rubies - Circled R
-}
 
 # @app.on_message(filters.command("tops"))
 @app.on_message(filters.command("xtop"))

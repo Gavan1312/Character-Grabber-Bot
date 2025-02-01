@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import math
 from . import add, deduct, show, abank, dbank, sbank, user_collection, app, capsify
 from .block import block_dec, temp_block
+from Grabber.config_settings import *
 
 async def handle_error(client: Client, message: Message, error: Exception):
     error_message = f"An error occurred: {str(error)}"

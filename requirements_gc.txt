@@ -11,11 +11,9 @@ requests
 bs4
 aiogram
 ffmpeg-python
-pillow==9.5.0
 telegraph
 pyttsx3
 psutil
 nekos.py
 tgcrypto 
 aiofiles
-typing

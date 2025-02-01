@@ -109,12 +109,14 @@ async def remove_spawn_after_timeout(chat_id, character, timeout):
 async def guess(_, message):
     chat_id = message.chat.id
     user_id = message.from_user.id
+    user_first_name = message.from_user.first_name
+    user_last_name = message.from_user.last_name
     user_data = await user_collection.find_one({'id': user_id})
     
     if not user_data:
         # return await message.reply_text("You need to start the bot first.")
         return await message.reply_text(
-            capsify(f"🚀 {get_user_full_name(user_id)}, You haven't started your journey yet, You need to start the bot first in DM. click the button below to Set on a new journey 🎊"),
+            capsify(f"🚀 {user_first_name + " " + user_last_name}, You haven't started your journey yet, You need to start the bot first in DM. click the button below to Set on a new journey 🎊"),
             reply_markup=IKM([
                 [IKB(capsify("Start in DM"), url=f"https://t.me/{BOT_USERNAME}?start=start")]
             ])

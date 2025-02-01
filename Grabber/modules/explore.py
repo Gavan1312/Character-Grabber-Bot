@@ -1,10 +1,11 @@
 from pyrogram import Client, filters
 from pyrogram.types import Message
 from datetime import datetime, timedelta
-from Grabber import application, user_collection, config_settings
+from Grabber import application, user_collection
 import random
 from . import app, user_collection, collection, add, deduct, show, capsify
 from .xp import add_xp, deduct_xp
+from Grabber.config_settings import *
 
 COOLDOWN_DURATION = 60
 COMMAND_BAN_DURATION = 600

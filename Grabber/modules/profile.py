@@ -7,6 +7,7 @@ from datetime import datetime
 import pytz
 from . import user_collection, collection, app, capsify
 from .block import block_dec, temp_block
+from Grabber.config_settings import *
 
 def custom_format_number(num):
     if int(num) >= 10**6:

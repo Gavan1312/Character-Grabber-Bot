@@ -6,8 +6,9 @@ from pyrogram.types import Message
 from Grabber import application, user_collection
 from . import add, deduct, show, app, sudo_filter
 from .block import block_dec, temp_block
+from Grabber.config import *
 
-log_chat_id = -1002203193964 
+log_chat_id = int(GROUP_ID) 
 
 last_usage_time = {}
 daily_code_usage = {}
@@ -55,14 +56,14 @@ async def gen(client, message: Message):
         await message.reply_text("Invalid usage. Usage: /gen <amount> <quantity>")
         return
 
-    code = await generate_random_code(prefix="SUMU-")
+    code = await generate_random_code(prefix="NACVAC-")
     generated_codes[code] = {'amount': amount, 'quantity': quantity, 'user_id': message.from_user.id}
 
     # Log the code generation in the log chat
     await client.send_message(
         log_chat_id,
         f"**New Code Generated**\n\n"
-        f"**User ID:** `{message.from_user.id}`\n"
+        f"**Thanks to:** `{message.from_user.first_name}`\n"
         f"**Code:** `{code}`\n"
         f"**Amount:** {amount}\n"
         f"**Quantity:** {quantity}"
