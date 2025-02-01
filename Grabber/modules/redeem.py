@@ -17,7 +17,7 @@ user_redemptions = {}
 async def generate_random_code(prefix=""):
     return prefix + ''.join(random.choices(string.ascii_lowercase + string.digits, k=5))
 
-@app.on_message(filters.command("daily_code"))
+@app.on_message(filters.command("dailycode"))
 @block_dec
 async def daily_code(client, message: Message):
     user_id = message.from_user.id
@@ -76,7 +76,7 @@ async def gen(client, message: Message):
     )
     await message.reply_text(response_text)
 
-@app.on_message(filters.command("redeem"))
+@app.on_message(filters.command("redeemcode"))
 @block_dec
 async def redeem(client, message: Message):
     args = message.command[1:]
