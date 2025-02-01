@@ -6,17 +6,22 @@ from datetime import datetime, timedelta
 from Grabber import collection, user_collection, user_totals_collection
 from . import add as add_balance, deduct as deduct_balance, app, capsify
 from .block import block_dec, temp_block
+from Grabber.config import *
+from Grabber.config_settings import *
 
 rarity_map = {
     "🟢 Common": True,
     "🔵 Medium": True,
     "🟠 Rare": True,
-    "🟡 Legendary": True,
-    "🎐 Celestial": True,
+    "🟡 Legendary": True
 }
 
 last_propose_times = {}
 proposing_users = {}
+propose_cooldown = 300 
+
+if(message.from_user.id == OWNER_ID and IN_DEV_MODE):
+    propose_cooldown = 1
 
 @app.on_message(filters.command("confess"))
 @block_dec
@@ -41,11 +46,11 @@ async def propose(client, message: Message):
 
     last_propose_time = last_propose_times.get(user_id)
     if last_propose_time:
-        time_since_last_propose = datetime.now() - last_propose_time
-        if time_since_last_propose < timedelta(minutes=5):
-            remaining_cooldown = timedelta(minutes=5) - time_since_last_propose
-            remaining_cooldown_minutes = remaining_cooldown.total_seconds() // 60
-            remaining_cooldown_seconds = remaining_cooldown.total_seconds() % 60
+        time_since_last_propose = (datetime.now() - last_propose_time).total_seconds()
+        if time_since_last_propose < propose_cooldown:
+            remaining_cooldown = propose_cooldown - time_since_last_propose
+            remaining_cooldown_minutes = remaining_cooldown // 60
+            remaining_cooldown_seconds = remaining_cooldown % 60
             await message.reply_text(capsify(f"Cooldown! Please wait {int(remaining_cooldown_minutes)}m {int(remaining_cooldown_seconds)}s before confessing again."))
             proposing_users[user_id] = False
             return
@@ -68,7 +73,9 @@ async def propose(client, message: Message):
         await message.reply_photo(photo=rejection_photo_path, caption=rejection_message)
     else:
         all_characters = list(await collection.find({}).to_list(length=None))
+        print(all_characters)
         valid_characters = [char for char in all_characters if char.get('rarity') in rarity_map.keys()]
+        print(valid_characters)
 
         if not valid_characters:
             await message.reply_text(capsify("No characters available with the specified rarity."))

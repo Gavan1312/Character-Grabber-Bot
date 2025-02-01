@@ -5,8 +5,14 @@ from pyrogram import Client, filters
 from . import user_collection, collection, capsify, app, db
 from .block import block_dec, temp_block
 from datetime import datetime
+from Grabber.config import *
+from Grabber.config_settings import *
 
 cooldown_collection = db.cooldowns
+marry_cooldown = 900
+
+if(message.from_user.id == OWNER_ID and IN_DEV_MODE):
+    marry_cooldown = 1
 
 async def get_cooldown_from_db(user_id):
     try:
@@ -96,6 +102,8 @@ async def handle_dice(client, message, receiver_id):
 
         if value in [1, 2, 5, 6]:
             unique_characters = await get_unique_characters(receiver_id)
+            print("marry unique : ")
+            print(unique_characters)
             if not unique_characters:
                 await send_error_report(client, message, "Failed to retrieve characters. Please try again later.")
                 return
@@ -104,8 +112,9 @@ async def handle_dice(client, message, receiver_id):
                 await user_collection.update_one({'id': receiver_id}, {'$push': {'characters': character}})
 
             for character in unique_characters:
+                married_character_name_to_display = character['name'].split()[0]
                 caption = (
-                    f"{capsify('Congratulations')}! {message.from_user.first_name}, {capsify('you are now married')}! "
+                    f"{capsify('Congratulations')}! {message.from_user.first_name}, {capsify(f'You have successfully tempted {married_character_name_to_display}! 🔥')}! "
                     f"{capsify('Here is your character')}:\n"
                     f"Name: {character['name']}\n"
                     f"Rarity: {character['rarity']}\n"
@@ -138,9 +147,9 @@ async def dice_command(client, message):
     last_roll_time = await get_cooldown_from_db(user_id)
     if last_roll_time:
         cooldown_time = (datetime.utcnow() - last_roll_time).total_seconds()
-        if cooldown_time < 3600:
-            remaining_time = 3600 - cooldown_time
-            hours, remainder = divmod(int(remaining_time), 3600)
+        if cooldown_time < marry_cooldown:
+            remaining_time = marry_cooldown - cooldown_time
+            hours, remainder = divmod(int(remaining_time), marry_cooldown)
             minutes, seconds = divmod(remainder, 60)
             await client.send_message(
                 chat_id=message.chat.id,
