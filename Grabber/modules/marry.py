@@ -72,8 +72,8 @@ async def handle_marriage(client, message, receiver_id):
 
         for character in unique_characters:
             caption = (
-                f"{capsify('Congratulations')}! {message.from_user.first_name}, {capsify('you are now married')}! "
-                f"{capsify('Here is your character')}:\n"
+                f"{capsify('Congratulations')}! {message.from_user.first_name}, {capsify('You have successfully tempted a waifu! 😈')}! "
+                f"{capsify('Here is your Waifu')}:\n"
                 f"Name: {character['name']}\n"
                 f"Rarity: {character['rarity']}\n"
                 f"Anime: {character['anime']}\n"
@@ -121,14 +121,14 @@ async def handle_dice(client, message, receiver_id):
         else:
             await client.send_message(
                 chat_id=message.chat.id,
-                text=f"{message.from_user.first_name}, {capsify('your marriage proposal was rejected and she ran away')}! 🤡",
+                text=f"{message.from_user.first_name}, {capsify('Your temptation has failed and she is laughing at you')}! 🤡",
                 reply_to_message_id=message.id
             )
 
     except Exception as e:
         await send_error_report(client, message, str(e))
 
-@app.on_message(filters.command("marry"))
+@app.on_message(filters.command("tempt"))
 @block_dec
 async def dice_command(client, message):
     user_id = message.from_user.id

@@ -18,7 +18,7 @@ rarity_map = {
 last_propose_times = {}
 proposing_users = {}
 
-@app.on_message(filters.command("propose"))
+@app.on_message(filters.command("confess"))
 @block_dec
 async def propose(client, message: Message):
     user_id = message.from_user.id
@@ -28,12 +28,12 @@ async def propose(client, message: Message):
     user_data = await user_collection.find_one({'id': user_id})
 
     if not user_data or int(user_data.get('balance', 0)) < 20000:
-        await message.reply_text(capsify("You need at least 20000 tokens to propose."))
+        await message.reply_text(capsify("You need at least 20000 tokens to confess your love."))
         proposing_users[user_id] = False
         return
 
     if proposing_users.get(user_id):
-        await message.reply_text(capsify("You are already proposing. Please wait for the current proposal to finish."))
+        await message.reply_text(capsify("You are already confessing your love. Please wait for the current confession to finish."))
         proposing_users[user_id] = False
         return
     else:
@@ -46,24 +46,24 @@ async def propose(client, message: Message):
             remaining_cooldown = timedelta(minutes=5) - time_since_last_propose
             remaining_cooldown_minutes = remaining_cooldown.total_seconds() // 60
             remaining_cooldown_seconds = remaining_cooldown.total_seconds() % 60
-            await message.reply_text(capsify(f"Cooldown! Please wait {int(remaining_cooldown_minutes)}m {int(remaining_cooldown_seconds)}s before proposing again."))
+            await message.reply_text(capsify(f"Cooldown! Please wait {int(remaining_cooldown_minutes)}m {int(remaining_cooldown_seconds)}s before confessing again."))
             proposing_users[user_id] = False
             return
 
     await deduct_balance(user_id, 10000)
 
-    proposal_message = capsify("✨ Time to Propose ✨")
+    proposal_message = capsify("✨ Time to Confess ✨")
     photo_path = 'https://telegra.ph/file/68491359070e2e045c919.jpg'
     await message.reply_photo(photo=photo_path, caption=proposal_message)
 
     await asyncio.sleep(2)
 
-    await message.reply_text(capsify("Asking for Her Hand 💍"))
+    await message.reply_text(capsify("Confessing your love 💌"))
 
     await asyncio.sleep(2)
 
     if random.random() < 0.6:
-        rejection_message = capsify("She pushed you away and screamed 😂")
+        rejection_message = capsify("She rejected your confession and slapped you 😔🤣")
         rejection_photo_path = 'https://graph.org/file/43ac16b34453bafe480d9.jpg'
         await message.reply_photo(photo=rejection_photo_path, caption=rejection_message)
     else:
@@ -76,7 +76,14 @@ async def propose(client, message: Message):
 
         character = random.choice(valid_characters)
         await user_collection.update_one({'id': user_id}, {'$push': {'characters': character}})
-        await message.reply_photo(photo=character['img_url'], caption=capsify(f"{character['name']} accepted your proposal!"))
+        # await message.reply_photo(photo=character['img_url'], caption=capsify(f"{character['name']} accepted your confession of love! 💕"))
+        await client.send_photo(
+            chat_id=message.chat.id,
+            photo=character['img_url'],
+            caption=capsify(f"{character['name']} accepted your confession of love! 💕"),
+            reply_to_message_id=message.id,  
+            protect_content=True  
+        )
 
     last_propose_times[user_id] = datetime.now()
     proposing_users[user_id] = False
