@@ -68,8 +68,9 @@ async def balance(client: Client, message: Message):
         # balance_message = "please start the bot in dm to register"
         # balance_message = capsify(balance_message)
         # await message.reply_text(balance_message)
+        text_to_reply = "🚀 " + str(await get_user_full_name(user_id)) + capsify(", You haven't started your journey yet. Click the button below to set off on a new adventure 🎊")
         return await message.reply_text(
-            capsify(f"🚀 {get_user_full_name(user_id)}, You haven't started your journey yet, You need to start the bot first in DM. click the button below to Set on a new journey 🎊"),
+            text_to_reply,
             reply_markup=IKM([
                 [IKB(capsify("Start in DM"), url=f"https://t.me/{BOT_USERNAME}?start=start")]
             ])

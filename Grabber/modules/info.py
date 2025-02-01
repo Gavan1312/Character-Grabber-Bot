@@ -36,8 +36,7 @@ async def details(update: Update, context: CallbackContext) -> None:
         ]
         reply_markup = IKM(keyboard)
 
-        await client.send_photo(
-            chat_id=update.message.chat.id,
+        await update.message.reply_photo(
             photo=character['img_url'],
             caption=capsify(caption),
             parse_mode="HTML",
