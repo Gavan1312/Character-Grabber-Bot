@@ -8,6 +8,7 @@ from .watchers import character_watcher
 from .block import temp_block, block_dec, block_cbq
 from Grabber.config import *
 from pyrogram.types import InlineKeyboardButton as IKB, InlineKeyboardMarkup as IKM
+from Grabber.utils.realuserdetails import *
 
 message_counts = {}
 spawn_locks = {}
@@ -113,7 +114,7 @@ async def guess(_, message):
     if not user_data:
         # return await message.reply_text("You need to start the bot first.")
         return await message.reply_text(
-            capsify("🚀 You need to start the bot first. in DM."),
+            capsify(f"🚀 {get_user_full_name(user_id)}, You haven't started your journey yet, You need to start the bot first in DM. click the button below to Set on a new journey 🎊"),
             reply_markup=IKM([
                 [IKB(capsify("Start in DM"), url=f"https://t.me/{BOT_USERNAME}?start=start")]
             ])
@@ -145,7 +146,7 @@ async def guess(_, message):
         # if user_balance < character_price:
         temp_true_variable = False
         if temp_true_variable == True:
-            await message.reply_text(capsify("❌ NOT ENOUGH COINS TO GRAB THIS CHARACTER."))
+            await message.reply_text(capsify("❌ NOT ENOUGH LOVE POINTS TO GRAB THIS CHARACTER. GAIN SOME LOVE POINTS FIRST"))
             return
         await user_collection.update_one({'id': user_id}, {'$push': {'characters': character}})
         # await deduct(user_id, character_price)
@@ -163,10 +164,10 @@ async def guess(_, message):
         await message.reply_text(
             capsify(
                 f"✅ {message.from_user.first_name}, you got a new waifu\n\n"
-                f"**🏵 NAME:** {character['name']}\n"
-                f"*🎇 RARITY:** {character['rarity']}\n"
-                f"*👀 SOURCE :* {character['anime']}\n"
-                f"*🆔 ID:* {character['id']}\n"
+                f"🏵 **NAME:** {character['name']}\n"
+                f"🎇 **RARITY:** {character['rarity']}\n"
+                f"👀 **SOURCE :** {character['anime']}\n"
+                f"🆔 **ID:** {character['id']}\n"
                 # "👉 CHECK YOUR HAREM NOW!"
             ),
             reply_markup=InlineKeyboardMarkup(keyboard)

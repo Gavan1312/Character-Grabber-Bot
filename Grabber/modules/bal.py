@@ -5,6 +5,7 @@ from datetime import datetime
 from .block import block_dec, temp_block
 from pyrogram.types import InlineKeyboardButton as IKB, InlineKeyboardMarkup as IKM
 from .cleantext import clean_text
+from Grabber.utils.realuserdetails import *
 
 @app.on_message(filters.command("bal"))
 @block_dec
@@ -68,7 +69,7 @@ async def balance(client: Client, message: Message):
         # balance_message = capsify(balance_message)
         # await message.reply_text(balance_message)
         return await message.reply_text(
-            capsify("🚀 You need to start the bot first. in DM."),
+            capsify(f"🚀 {get_user_full_name(user_id)}, You haven't started your journey yet, You need to start the bot first in DM. click the button below to Set on a new journey 🎊"),
             reply_markup=IKM([
                 [IKB(capsify("Start in DM"), url=f"https://t.me/{BOT_USERNAME}?start=start")]
             ])

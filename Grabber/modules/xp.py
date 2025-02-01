@@ -7,6 +7,8 @@ from telegram.ext import CommandHandler
 from .block import block_dec
 from .block import capsify
 from pyrogram.types import InlineKeyboardButton as IKB, InlineKeyboardMarkup as IKM
+from Grabber.utils.realuserdetails import *
+
 XP_PER_LEVEL = 10
 
 LEVEL_TITLES = {
@@ -48,7 +50,7 @@ async def check_stats(_, message: Message):
     if not user_data:
         # return await message.reply_text("You need to start the bot first.")
         return await message.reply_text(
-            capsify("🚀 You need to start the bot first. in DM."),
+            capsify(f"🚀 {get_user_full_name(user_id)}, You haven't started your journey yet, You need to start the bot first in DM. click the button below to Set on a new journey 🎊"),
             reply_markup=IKM([
                 [IKB(capsify("Start in DM"), url=f"https://t.me/{BOT_USERNAME}?start=start")]
             ])
