@@ -20,7 +20,7 @@ last_propose_times = {}
 proposing_users = {}
 propose_cooldown = 300 
 
-if(message.from_user.id == OWNER_ID and IN_DEV_MODE):
+if(IN_DEV_MODE):
     propose_cooldown = 1
 
 @app.on_message(filters.command("confess"))

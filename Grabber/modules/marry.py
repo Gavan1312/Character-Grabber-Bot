@@ -11,7 +11,7 @@ from Grabber.config_settings import *
 cooldown_collection = db.cooldowns
 marry_cooldown = 900
 
-if(message.from_user.id == OWNER_ID and IN_DEV_MODE):
+if(IN_DEV_MODE):
     marry_cooldown = 1
 
 async def get_cooldown_from_db(user_id):

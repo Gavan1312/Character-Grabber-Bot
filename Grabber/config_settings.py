@@ -1,3 +1,7 @@
+from pyrogram import Client, filters
+from Grabber import app
+from Grabber.config import OWNER_ID 
+
 currency_symbols = {
     "xp": "Level ",        
     "balance": "Ƀ",   
@@ -29,7 +33,6 @@ currency_bag_title = {
 IN_DEV_MODE = False  # Default state
 
 @app.on_message(filters.command("indevmode") & filters.user(OWNER_ID))
-@block_dec
 async def indev_mode_command(client, message):
     if(message.from_user.id != OWNER_ID):
         return
