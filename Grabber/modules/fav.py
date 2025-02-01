@@ -34,17 +34,18 @@ async def fav(client: Client, message: Message):
         await handle_confirmation(user_id, character_id, character)
     else:
         # Send the image with confirmation buttons in a single message
-        await message.reply_photo(
-            photo=character['img_url'],  # Use the character's image URL
+        await client.send_photo(
+            chat_id=message.chat.id,
+            photo=character['img_url'],  # Character's image URL
             caption=capsify(f'Are you sure you want to make {character["name"]} your favorite Waifu?'),
-            reply_markup=IKM(
+            reply_to_message_id=message.id,  # Mimic reply effect
+            protect_content=True,  # Prevent saving/forwarding (only works in private chats & channels)
+            reply_markup=IKM([
                 [
-                    [
-                        IKB(capsify("✅ Yes"), callback_data=f'confirm_{user_id}_{character_id}'),
-                        IKB(capsify("❌ No"), callback_data=f'cancel_{user_id}_{character_id}')
-                    ]
+                    IKB(capsify("✅ Yes"), callback_data=f'confirm_{user_id}_{character_id}'),
+                    IKB(capsify("❌ No"), callback_data=f'cancel_{user_id}_{character_id}')
                 ]
-            )
+            ])
         )
         # keyboard = IKM(
         #     [

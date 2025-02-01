@@ -31,7 +31,7 @@ async def give_character(receiver_id, character_id):
     else:
         raise ValueError("Character not found.")
 
-@app.on_message(filters.command(["give"]) & sudo_filter)
+@app.on_message(filters.command(["givecharacter"]) & sudo_filter)
 async def give_character_command(client, message):
     if not message.reply_to_message:
         await message.reply_text("You need to reply to a user's message to give a character!")

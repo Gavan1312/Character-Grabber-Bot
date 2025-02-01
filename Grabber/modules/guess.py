@@ -35,9 +35,12 @@ async def guess(client, message: Message):
         'message_id': message.id  
     }
 
-    await message.reply_photo(
+    await client.send_photo(
+        chat_id = chat_id,
         photo=character['img_url'],
-        caption=capsify("Guess the character's name! First one to guess correctly wins 20-30 Ruby!")
+        caption=capsify("Guess the character's name! First one to guess correctly wins 20-30 Ruby!"),
+        protect_content=True,
+        reply_to_message_id=message.id
     )
 
     asyncio.create_task(check_timeout(client, message, chat_id))

@@ -116,7 +116,7 @@ async def guess(_, message):
     if not user_data:
         # return await message.reply_text("You need to start the bot first.")
         return await message.reply_text(
-            capsify(f"🚀 {user_first_name + " " + user_last_name}, You haven't started your journey yet, You need to start the bot first in DM. click the button below to Set on a new journey 🎊"),
+            capsify(f"🚀 {user_first_name} + " " + {user_last_name}, You haven't started your journey yet, You need to start the bot first in DM. click the button below to Set on a new journey 🎊"),
             reply_markup=IKM([
                 [IKB(capsify("Start in DM"), url=f"https://t.me/{BOT_USERNAME}?start=start")]
             ])

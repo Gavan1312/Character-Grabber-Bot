@@ -50,11 +50,15 @@ async def gbuy(client, message):
     ]
     reply_markup = IKM(keyboard)
 
-    msg = await message.reply_photo(
+    msg = await client.send_photo(
+        chat_id=message.chat.id,
         photo=character['img_url'],
         caption=capsify(f"Name: {character['name']}\nID: {character['id']}\nRarity: {character['rarity']}\nPrice: {price}"),
+        reply_to_message_id=message.id,  
+        protect_content=True, 
         reply_markup=reply_markup
     )
+
 
     ags[msg.message_id] = user_id
 
