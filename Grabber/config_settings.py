@@ -18,3 +18,10 @@ currency_names_plural = {
     "gold": "Gold",     
     "rubies": "Rubies"    
 }
+
+currency_bag_title = {
+    "xp": "Level ",        
+    "balance": "💟 Love Stash",   
+    "gold": "Gold",     
+    "rubies": "Rubies"    
+}

@@ -8,6 +8,7 @@ from . import add, deduct, show, sudb, app, gend_watcher
 from . import group_user_totals_collection
 from words import words
 from Grabber.config import *
+from Grabber.config_settings import *
 
 BG_IMAGE_PATH = "Images/blue.jpg"
 DEFAULT_MESSAGE_LIMIT = 30
@@ -108,7 +109,7 @@ async def handle_messages(client: Client, message):
         ]
         reply_markup = IKM(keyboard)
 
-        await client.send_photo(chat_id, photo=image_bytes, caption="Guess the word in the image to win!", reply_markup=reply_markup)
+        await client.send_photo(chat_id, photo=image_bytes, caption=f"Guess the word in the image to win {currency_names_plural['balance']}! And increase your {currency_bag_title['balance']}", reply_markup=reply_markup)
 
 @app.on_message(filters.command("wtime"))
 async def on_wtime(client: Client, message):
