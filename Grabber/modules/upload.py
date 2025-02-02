@@ -98,7 +98,7 @@ async def update(client: Client, message: Message):
 
     await message.reply_text('Update done in Database and all user collections.')
 
-@app.on_message(filters.command('r') & sudo_filter)
+@app.on_message(filters.command('rarity_update') & sudo_filter)
 async def update_rarity(client: Client, message: Message):
     args = message.text.split(maxsplit=2)[1:]
     if len(args) != 2:
@@ -136,7 +136,7 @@ async def update_rarity(client: Client, message: Message):
 
     await message.reply_text('Rarity updated in Database and all user collections.')
 
-@app.on_message(filters.command('dr') & sudo_filter)
+@app.on_message(filters.command('deleting_rarity_dont_useanyone') & sudo_filter)
 async def delete_rarity(client: Client, message: Message):
     args = message.text.split(maxsplit=1)[1:]
     if len(args) != 1:

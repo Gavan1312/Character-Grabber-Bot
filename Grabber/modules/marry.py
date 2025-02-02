@@ -114,7 +114,7 @@ async def handle_dice(client, message, receiver_id):
             for character in unique_characters:
                 married_character_name_to_display = character['name'].split()[0]
                 caption = (
-                    f"{capsify('Congratulations')}! {message.from_user.first_name}, {capsify(f'You have successfully tempted {married_character_name_to_display}! 🔥')}! "
+                    f"{capsify('Congratulations')}! {message.from_user.first_name}, {capsify(f'You have successfully tempted {married_character_name_to_display}! 🔥')}!\n"
                     f"{capsify('Here is your character')}:\n"
                     f"Name: {character['name']}\n"
                     f"Rarity: {character['rarity']}\n"

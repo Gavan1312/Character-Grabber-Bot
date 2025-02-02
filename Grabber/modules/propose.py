@@ -59,7 +59,14 @@ async def propose(client, message: Message):
 
     proposal_message = capsify("✨ Time to Confess ✨")
     photo_path = 'https://telegra.ph/file/68491359070e2e045c919.jpg'
-    await message.reply_photo(photo=photo_path, caption=proposal_message)
+    # await message.reply_photo(photo=photo_path, caption=proposal_message)
+    await client.send_photo(
+        chat_id=message.chat.id,
+        photo=photo_path,
+        caption=proposal_message,
+        reply_to_message_id=message.id,  
+        protect_content=True  
+    )
 
     await asyncio.sleep(2)
 
@@ -70,7 +77,14 @@ async def propose(client, message: Message):
     if random.random() < 0.6:
         rejection_message = capsify("She rejected your confession and slapped you 😔🤣")
         rejection_photo_path = 'https://graph.org/file/43ac16b34453bafe480d9.jpg'
-        await message.reply_photo(photo=rejection_photo_path, caption=rejection_message)
+        # await message.reply_photo(photo=rejection_photo_path, caption=rejection_message)
+        await client.send_photo(
+            chat_id=message.chat.id,
+            photo=rejection_photo_path,
+            caption=rejection_message,
+            reply_to_message_id=message.id,  
+            protect_content=True  
+        )
     else:
         all_characters = list(await collection.find({}).to_list(length=None))
         print(all_characters)

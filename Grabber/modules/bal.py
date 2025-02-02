@@ -7,7 +7,7 @@ from pyrogram.types import InlineKeyboardButton as IKB, InlineKeyboardMarkup as 
 from .cleantext import clean_text
 from Grabber.utils.realuserdetails import *
 
-@app.on_message(filters.command("bal"))
+@app.on_message(filters.command(["bal", "mystash"]))
 @block_dec
 async def balance(client: Client, message: Message):
     if not message.from_user:
