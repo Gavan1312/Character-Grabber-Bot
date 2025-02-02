@@ -3,8 +3,8 @@ from pyrogram import Client, filters
 from pyrogram.types import Message
 from pymongo import ReturnDocument
 import random
-from . import uploader_filter, app, user_collection
-from Grabber import collection, db, CHARA_CHANNEL_ID, OWNER_IDv
+from Grabber.modules import uploader_filter, app, user_collection
+from Grabber import collection, db, CHARA_CHANNEL_ID, OWNER_ID
 from Grabber.modules.UploaderPanel.upload_catbox import upload_to_catbox
 
 @app.on_message(filters.command('update_image') & uploader_filter)

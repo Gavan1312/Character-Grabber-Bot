@@ -78,9 +78,15 @@ def __list_all_modules():
     import glob
     from os.path import basename, dirname, isfile
 
-    mod_paths = glob.glob(dirname(__file__) + "/*.py")
+    # mod_paths = glob.glob(dirname(__file__) + "/*.py")
+    # all_modules = [
+    #     basename(f)[:-3]
+    #     for f in mod_paths
+    #     if isfile(f) and f.endswith(".py") and not f.endswith("__init__.py")
+    # ]
+    mod_paths = glob.glob(dirname(__file__) + "/**/*.py", recursive=True)
     all_modules = [
-        basename(f)[:-3]
+        os.path.relpath(f, dirname(__file__)).replace(os.sep, ".")[:-3]
         for f in mod_paths
         if isfile(f) and f.endswith(".py") and not f.endswith("__init__.py")
     ]
