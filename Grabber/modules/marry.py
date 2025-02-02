@@ -153,7 +153,7 @@ async def dice_command(client, message):
             minutes, seconds = divmod(remainder, 60)
             await client.send_message(
                 chat_id=message.chat.id,
-                text=capsify(f"Please wait {hours} hours, {minutes} minutes, and {seconds} seconds before rolling again."),
+                text=capsify(f"Please wait {hours} hours, {minutes} minutes, and {seconds} seconds before trying to someone tempt again."),
                 reply_to_message_id=message.id
             )
             return

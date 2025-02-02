@@ -122,9 +122,12 @@ async def check_answer(client, message: Message):
 
         if user_data['wins'] <= WIN_LIMIT:
             try:
-                await message.reply_photo(
+                await client.send_photo(
+                    chat_id=message.chat.id,
                     photo=scrabble_data['character']['img_url'],
-                    caption=capsify(f"{scrabble_data['character']['name']} added to your collection! 🎉")
+                    caption=capsify(f"{scrabble_data['character']['name']} added to your collection! 🎉"),
+                    reply_to_message_id=message.id,  
+                    protect_content=True  
                 )
             except Exception:
                 await message.reply_text(capsify(f"{scrabble_data['character']['name']} added to your collection! 🎉"))

@@ -48,6 +48,13 @@ async def give_character_command(client, message):
         if result:
             img_url, caption = result
             await message.reply_photo(photo=img_url, caption=caption)
+            await client.send_photo(
+                chat_id=message.chat.id,
+                photo=img_url,
+                caption=caption,
+                reply_to_message_id=message.id,  
+                protect_content=True  
+            )
             
             # Log the give action
             log_message = f"{giver_name} gave character {character_id} to {receiver_name}"

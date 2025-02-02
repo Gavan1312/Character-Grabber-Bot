@@ -56,7 +56,7 @@ async def start_auction(chat_id):
             f"💰 {capsify('MINIMUM BID')}: 10000\n"
             f"⏳ {capsify('AUCTION LASTS FOR 60 SECONDS!')}"
         )
-        await app.send_photo(chat_id, photo=character['img_url'], caption=caption)
+        await app.send_photo(chat_id, photo=character['img_url'], caption=caption, protect_content= True)
         await asyncio.sleep(60)
         await finalize_auction(chat_id)
         return True
