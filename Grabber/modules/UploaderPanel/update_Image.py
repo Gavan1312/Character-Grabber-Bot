@@ -1,8 +1,7 @@
 import requests
 from pyrogram import Client, filters
 from pyrogram.types import Message
-from pymongo import ReturnDocument
-import random
+from pymongo import ReturnDocument, UpdateOne
 from Grabber.modules import uploader_filter, app, user_collection
 from Grabber import collection, db, CHARA_CHANNEL_ID, OWNER_ID
 from Grabber.modules.UploaderPanel.upload_catbox import upload_to_catbox

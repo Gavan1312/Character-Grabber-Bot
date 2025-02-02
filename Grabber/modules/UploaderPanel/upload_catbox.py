@@ -1,3 +1,5 @@
+import requests 
+
 def upload_to_catbox(photo_path):
     url = "https://catbox.moe/user/api.php"
     with open(photo_path, 'rb') as photo:
