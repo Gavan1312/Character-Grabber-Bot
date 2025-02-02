@@ -81,7 +81,8 @@ async def update(client: Client, message: Message):
         await message.reply_text('Character not found.')
         return
 
-    valid_fields = ['img_url', 'name', 'anime', 'rarity']
+    # valid_fields = ['img_url', 'name', 'anime', 'rarity']
+    valid_fields = ['name', 'anime', 'rarity']
     if field not in valid_fields:
         await message.reply_text(f'Invalid field. Please use one of the following: {", ".join(valid_fields)}')
         return
