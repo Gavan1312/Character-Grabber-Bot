@@ -7,7 +7,7 @@ from . import add, deduct, show, app
 from .block import block_dec
 from .xp import add_xp, deduct_xp
 
-cooldown_duration_roll = 30
+cooldown_duration_roll = 120
 last_usage_time_roll = {}
 
 @app.on_message(filters.command(["basket"]))
@@ -33,31 +33,34 @@ async def roll_dart(client: Client, message: t.Message):
         return await message.reply_text("Invalid command.\nUsage: /basket 10000")
 
     try:
-        bastek_amount = int(command_parts[1].replace(',', ''))
+        bastet_amount = int(command_parts[1].replace(',', ''))
     except ValueError:
         return await message.reply_text("Invalid amount.")
 
     bal = await show(user_id)
     if bal is None:
-        return await message.reply_text("You don't have enough Love Points to place this bet.")
+        return await message.reply_text(f"You don't have enough {currency_names_plural['balance']} to place a basketball.")
 
-    if bastek_amount > bal:
-        return await message.reply_text("Insufficient Love Points to place this bet.")
+    if bastet_amount > bal:
+        return await message.reply_text(f"Insufficient {currency_names_plural['balance']} to place a basketball.")
 
     min_bet_amount = int(bal * 0.05)
-    if bastek_amount < min_bet_amount:
-        return await message.reply_text(f"Please bet at least 5% of your Love Points, which is ₩{min_bet_amount}.")
+    if bastet_amount < min_bet_amount:
+        return await message.reply_text(f"Please bet at least 5% of your {currency_names_plural['balance']}, which is {currency_symbols['balance']}{min_bet_amount}.")
 
     value = await client.send_dice(chat_id=message.chat.id, emoji="🏀")
 
     await asyncio.sleep(2)
-    if value.dice.value == 6:  # Winning only if the dice rolls a 6
-        await add(user_id, bastek_amount)
-        await message.reply_text(f"[🏀] You're lucky!\nYou won ₩{bastek_amount}")
-        await add_xp(user_id, 4)
+    
+    dice_result = value.dice.value 
+    
+    if dice_result in [4, 5]: # Winning only if the dice rolls a 6
+        await add(user_id, bastet_amount)
+        await message.reply_text(f"[🏀] You're lucky!\nYou won {currency_symbols['balance']}{bastet_amount}")
+        await add_xp(user_id, 2)
     else:
-        await deduct(user_id, bastek_amount)
-        await message.reply_text(f"[🍷] Better luck next time!\nYou lost ₩{bastek_amount}")
+        await deduct(user_id, bastet_amount)
+        await message.reply_text(f"[🍷] Better luck next time!\nYou lost {currency_symbols['balance']}{bastet_amount}")
         # await deduct_xp(user_id, 2)
 
     last_usage_time_roll[user_id] = current_time

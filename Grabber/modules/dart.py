@@ -40,26 +40,33 @@ async def roll_dart(client: Client, message: t.Message):
 
     bal = await show(user_id)
     if bal is None:
-        return await message.reply_text("You don't have enough cash to place this bet.")
+        return await message.reply_text(f"You don't have enough {currency_names_plural['balance']} to throw a dart.")
 
     if dart_amount > bal:
-        return await message.reply_text("Insufficient Love Points to place this bet.")
+        return await message.reply_text(f"Insufficient {currency_names_plural['balance']} to throw a dart.")
 
     min_bet_amount = int(bal * 0.05)
     if dart_amount < min_bet_amount:
-        return await message.reply_text(f"Please bet at least 5% of your Love Points, which is ₩{min_bet_amount}.")
+        return await message.reply_text(f"Please bet at least 5% of your {currency_names_plural['balance']}, which is {currency_symbols['balance']}{min_bet_amount}.")
 
     value = await client.send_dice(chat_id=message.chat.id, emoji="🎯")
     await asyncio.sleep(2)
 
-    if value.dice.value == 6:
+    dice_result = value.dice.value  # Telegram returns a number between 1-6
+
+    if dice_result == 6:  # Perfect shot!
         reward_amount = dart_amount * 3
         await add(user_id, reward_amount)
-        await message.reply_text(f"[🎯] You're lucky!\nYou won ₩{reward_amount}")
-        await add_xp(user_id, 4)
-    else:
+        await message.reply_text(f"[🎯] **Bullseye!** 🎯\nYou won {currency_symbols['balance']}{reward_amount}!")
+        await add_xp(user_id, 5)
+    elif dice_result in [4, 5]:  # Good shot!
+        reward_amount = int(dart_amount * 1.5)
+        await add(user_id, reward_amount)
+        await message.reply_text(f"[🎯] **Great shot!** ✨\nYou won {currency_symbols['balance']}{reward_amount}!")
+        await add_xp(user_id, 3)
+    else:  # 1, 2, 3 = Miss
         await deduct(user_id, dart_amount)
-        await message.reply_text(f"[🎯] Better luck next time!\nYou lost ₩{dart_amount}")
-        # await deduct_xp(user_id, 2)
+        await message.reply_text(f"[🎯] **Missed the target!** 😢\nYou lost {currency_symbols['balance']}{dart_amount}.")
+        # await deduct_xp(user_id, 2)  # Optional XP loss
 
     last_usage_time_roll[user_id] = current_time
