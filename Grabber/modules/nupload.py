@@ -5,6 +5,7 @@ from pymongo import ReturnDocument
 import random
 from . import uploader_filter, app, user_collection
 from Grabber import collection, db, CHARA_CHANNEL_ID, OWNER_ID
+from Grabber.modules.UploaderPanel.upload_catbox import upload_to_catbox
 
 async def get_next_sequence_number(sequence_name):
     sequence_collection = db.sequences
@@ -35,20 +36,6 @@ rarity_map = {
     13: "⚡ Drip",
     14: "🍥 Retro"
 }
-
-
-def upload_to_catbox(photo_path):
-    url = "https://catbox.moe/user/api.php"
-    with open(photo_path, 'rb') as photo:
-        response = requests.post(
-            url,
-            data={'reqtype': 'fileupload'},
-            files={'fileToUpload': photo}
-        )
-    if response.status_code == 200 and response.text.startswith("https://"):
-        return response.text.strip()
-    else:
-        raise Exception(f"Catbox upload failed: {response.text}")
 
 
 @app.on_message(filters.command('upload') & uploader_filter)

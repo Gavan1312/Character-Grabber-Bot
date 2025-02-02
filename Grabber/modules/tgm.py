@@ -1,22 +1,7 @@
 import requests
 from pyrogram import filters
 from . import app
-
-
-def upload_to_catbox(file_path):
-    """Uploads a file to Catbox and returns the file URL."""
-    url = "https://catbox.moe/user/api.php"
-    with open(file_path, "rb") as file:
-        response = requests.post(
-            url,
-            data={"reqtype": "fileupload"},
-            files={"fileToUpload": file}
-        )
-    if response.status_code == 200:
-        return response.text.strip()
-    else:
-        raise Exception(f"Catbox upload failed: {response.text}")
-
+from Grabber.modules.UploaderPanel.upload_catbox import upload_to_catbox
 
 @app.on_message(filters.command("tgm"))
 def ul(_, message):
