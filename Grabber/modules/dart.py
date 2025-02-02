@@ -7,6 +7,7 @@ from Grabber import user_collection
 from . import add, deduct, show, app
 from .block import block_dec, temp_block
 from .xp import add_xp, deduct_xp
+from Grabber.config_settings import * 
 
 cooldown_duration_roll = 30
 last_usage_time_roll = {}

@@ -6,8 +6,9 @@ from Grabber import application, user_collection
 from . import add, deduct, show, app
 from .block import block_dec
 from .xp import add_xp, deduct_xp
+from Grabber.config_settings import * 
 
-cooldown_duration_roll = 120
+cooldown_duration_roll = 90
 last_usage_time_roll = {}
 
 @app.on_message(filters.command(["basket"]))
@@ -50,7 +51,7 @@ async def roll_dart(client: Client, message: t.Message):
 
     value = await client.send_dice(chat_id=message.chat.id, emoji="🏀")
 
-    await asyncio.sleep(2)
+    await asyncio.sleep(6)
     
     dice_result = value.dice.value 
     
