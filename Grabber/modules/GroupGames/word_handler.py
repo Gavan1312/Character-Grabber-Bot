@@ -3,9 +3,18 @@ import io
 import time
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton as IKB, InlineKeyboardMarkup as IKM
-from Grabber import add, app, group_user_totals_collection
-from Utility.image_utils import generate_random_word_image
+from Grabber import app, group_user_totals_collection
+from Grabber.utils.bal import add
+from Grabber.modules.Utility.image_utils import generate_random_math_image
 from words import words
+from Grabber.modules.watchers import gend_watcher
+
+from Grabber.utils.bal  import add, deduct, show
+from Grabber.modules import group_user_totals_collection,sudb
+from words import words
+from Grabber.config import *
+from Grabber.config_settings import *
+
 
 alpha_dict = {}
 guess_start_time = {}

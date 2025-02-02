@@ -2,9 +2,14 @@ import random
 import io
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton as IKB, InlineKeyboardMarkup as IKM
-from Grabber import add, capsify, app, sudo_filter, group_user_totals_collection
-from modules.block import block_cbq
-from Utility.image_utils import generate_random_math_image
+from Grabber import app, group_user_totals_collection
+from Grabber.utils.bal import add
+from Grabber.modules.block import block_cbq
+from Grabber.modules.Utility.image_utils import generate_random_math_image
+
+from Grabber import user_collection, collection
+from Grabber.modules import add, deduct, show, abank, dbank, sbank, sudb, capsify, app, sudo_filter, group_user_totals_collection
+from Grabber.modules.watchers import delta_watcher
 
 math_questions = {}
 group_message_counts = {}
