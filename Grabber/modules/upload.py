@@ -6,6 +6,7 @@ import random
 from . import sudo_filter, app
 from Grabber import application, collection, db, CHARA_CHANNEL_ID, user_collection
 from . import uploader_filter
+from .Settings.rarityMap import *
 
 async def get_next_sequence_number(sequence_name):
     sequence_collection = db.sequences
@@ -19,23 +20,7 @@ async def get_next_sequence_number(sequence_name):
         return 0
     return sequence_document['sequence_value']
 
-rarity_map = {
-    1: "🟢 Common",
-    2: "🔵 Medium",
-    3: "🟠 Rare",
-    4: "🟡 Legendary",
-    5: "🎐 Celestial",
-    6: "🥵 Divine",
-    7: "🥴 Special",
-    8: "💮 Exclusive",
-    9: "🔮 Limited",
-    10: "🍭 Cosplay",
-    11: "💋 Aura",
-    12: "❄️ Winter",
-    13: "⚡ Drip",
-    14: "🍥 Retro"
-}
-
+rarity_map = RARITY_TO_USE_NUMBER_MAPPING
 
 @app.on_message(filters.command('delete') & sudo_filter)
 async def delete(client: Client, message: Message):

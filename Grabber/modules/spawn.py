@@ -9,6 +9,7 @@ from .block import temp_block, block_dec, block_cbq
 from Grabber.config import *
 from pyrogram.types import InlineKeyboardButton as IKB, InlineKeyboardMarkup as IKM
 from Grabber.utils.realuserdetails import *
+from .Settings.rarityMap import *
 
 message_counts = {}
 spawn_locks = {}
@@ -40,17 +41,7 @@ async def spawn_character(chat_id):
             await group_user_totals_collection.update_one({"chat_id": chat_id}, {"$set": chat_modes}, upsert=True)
         if not chat_modes.get('character', True):
             return False
-        rarity_map = {
-            1: "🟢 Common",
-            2: "🔵 Medium",
-            3: "🟠 Rare",
-            4: "🟡 Legendary",
-            5: "🎐 Celestial",
-            6: "🥵 Divine",
-            7: "🥴 Special",
-            8: "💮 Exclusive",
-            9: "🔮 Limited",
-        }
+        rarity_map = RARITY_TO_USE_FOR_SPAWN
         allowed_rarities = [rarity_map[i] for i in range(1, 10)]
         all_characters = await collection.find({'rarity': {'$in': allowed_rarities}}).to_list(length=None)
         if not all_characters:

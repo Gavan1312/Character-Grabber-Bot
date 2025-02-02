@@ -30,7 +30,7 @@ currency_bag_title = {
     "rubies": "Rubies"    
 }
 
-IN_DEV_MODE = False  # Default state
+IN_DEV_MODE = False
 
 @app.on_message(filters.command("indevmode") & filters.user(OWNER_ID))
 async def indev_mode_command(client, message):
