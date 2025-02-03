@@ -1,6 +1,6 @@
 import os
 
-BOT_NAME = "Character Grabber & Game Bot"
+BOT_NAME = "N Testing Grab bot"
 OWNER_ID = 880926547
 OWNER_ALT_ID = 1185929664
 GROUP_ID = "-1002448269936"
@@ -11,7 +11,7 @@ TOKEN = "7412154805:AAFj0hKoduUXVyWHQwctmzVeXV88-NH4lJE"
 
 api_id = 28124559
 api_hash = "efc605d197c57b8adbb77bed4c2dac01"
-PHOTO_URL = ["https://github.com/Gavan1312/Character-Grabber-Bot/blob/main/Images/bot-icon.jpg?raw=true%22%20data-hpc=%22true"]
+PHOTO_URL = ["https://github.com/Gavan1312/Character-Grabber-Bot/blob/main/Images/bg-rep.jpg?raw=true%22%20data-hpc=%22true"]
 Video_Show_for_start = False
 SUPPORT_CHAT = "Gomu_Gomu_Syndicate1"
 PLAY_CHAT = "Log_Pose_To_Laughtale1"
