@@ -83,22 +83,22 @@ async def gamble(client, message):
 
     min_bet = int(balance * 0.05)
     if amount < min_bet:
-        await message.reply_text(capsify(f"Please bet at least 5% of your {currency_names_plural['balance']}, which is {currency_symbols['balance']}{min_bet}."))
+        await message.reply_text(capsify(f"Please bet at least 5% of your {currency_names_plural['balance']}, which is {currency_symbols['balance']}`{min_bet}`."))
         return
 
     if amount > balance:
-        await message.reply_text(capsify(f"You do not have enough {currency_names_plural['balance']} to bet {amount}. Your current {currency_names_plural['balance']} are {currency_symbols['balance']}{balance}."))
+        await message.reply_text(capsify(f"You do not have enough {currency_names_plural['balance']} to bet `{amount}`. Your current {currency_names_plural['balance']} are {currency_symbols['balance']}`{balance}`."))
         return
 
     # Winning chance is now 40 out of 100
     if random.randint(1, 100) <= 40:  # 40% chance to win
         coin_side = choice
         new_balance = amount  # Amount to add
-        message_text = capsify(f"🤩 You chose {choice} and won {currency_symbols['balance']}{amount}.\nCoin fell on {coin_side} side.")
+        message_text = capsify(f"🤩 You chose {choice} and won {currency_symbols['balance']}`{amount}`.\nCoin fell on {coin_side} side.")
     else:
         coin_side = 'h' if choice == 't' else 't'
         new_balance = -amount  # Amount to deduct
-        message_text = capsify(f"🥲 You chose {choice} and lost {currency_symbols['balance']}{amount}.\nCoin fell on {coin_side} side.")
+        message_text = capsify(f"🥲 You chose {choice} and lost {currency_symbols['balance']}`{amount}`.\nCoin fell on {coin_side} side.")
 
     await add(user_id, new_balance)
 

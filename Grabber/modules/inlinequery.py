@@ -42,7 +42,7 @@ async def inlinequery(client: Client, query: InlineQuery):
                 title=character['name'],
                 description=f"Anime: {character['anime']} | Rarity: {character.get('rarity', '')}",
                 input_message_content=InputTextMessageContent(
-                    f"Click below to view {character['name']} in the group chat."
+                    f"Click below to view {character['name']}."
                 ),
                 reply_markup=InlineKeyboardMarkup([
                     [

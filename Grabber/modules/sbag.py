@@ -18,8 +18,8 @@ async def sbag(client, message):
         weapons = user_data.get('weapons', [])
 
         message_text = (
-            f"💰 Your current gold amount: {gold_amount}\n"
-            f"💎 Your current ruby amount: {ruby_amount}\n\n"
+            f"💰 Your current gold amount: `{gold_amount}`\n"
+            f"💎 Your current ruby amount: `{ruby_amount}`\n\n"
         )
 
         if weapons:
