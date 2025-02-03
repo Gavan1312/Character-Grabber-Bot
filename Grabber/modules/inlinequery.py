@@ -59,9 +59,8 @@ async def inlinequery(client: Client, query: InlineQuery):
         await query.answer(results, next_offset=next_offset, cache_time=5)
 
         # print(f"[DEBUG] Inline Query Answered Successfully.")  # Debug
-
     except Exception as e:
-        # print(f"[ERROR] Inline Query Failed: {e}")  # Debug
+        print(f"[ERROR] Inline Query Failed: {e}")  # Debug
 
 @app.on_callback_query()
 async def button_click(client, callback_query):
@@ -95,10 +94,10 @@ async def button_click(client, callback_query):
                     protect_content=True  # 🔒 Protecting Content
                 )
                 # print(f"[DEBUG] Image Sent to Group Chat ID: {chat_id}.")  # Debug
-            else:
+            # else:
                 # print(f"[WARNING] Character Not Found for ID: {char_id}")  # Debug
 
             await callback_query.answer()
 
         except Exception as e:
-            # print(f"[ERROR] Callback Query Failed: {e}")  # Debug
+            print(f"[ERROR] Inline Callback Query Failed: {e}")  # Debug
