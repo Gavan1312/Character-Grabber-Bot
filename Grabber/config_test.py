@@ -3,7 +3,7 @@ import os
 BOT_NAME = "N Testing Grab bot"
 OWNER_ID = 880926547
 OWNER_ALT_ID = 1185929664
-GROUP_ID = "-1002448269936"
+GROUP_ID = "-1002366780756"
 # TOKEN = os.getenv("BOT_TOKEN")
 # api_id = os.getenv("DEV_API_ID")
 # api_hash = os.getenv("DEV_API_HASH")

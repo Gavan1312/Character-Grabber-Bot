@@ -113,6 +113,9 @@ block_dic = {}
 
 def block_dec(func):
     async def wrapper(client, message: Message):
+        if message.from_user is None:
+            return await message.reply_text("Something is missing, Or you're in Anon mode")
+        
         user_id = message.from_user.id
         if await is_blocked(user_id) or user_id in block_dic:
             reason = await get_block_reason(user_id)

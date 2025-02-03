@@ -56,7 +56,7 @@ async def gen(client, message: Message):
         await message.reply_text("Invalid usage. Usage: /gen <amount> <quantity>")
         return
 
-    code = await generate_random_code(prefix="NACVAC-")
+    code = await generate_random_code(prefix="NAC-")
     generated_codes[code] = {'amount': amount, 'quantity': quantity, 'user_id': message.from_user.id}
 
     # Log the code generation in the log chat
@@ -89,7 +89,7 @@ async def redeem(client, message: Message):
     if code in generated_codes:
         details = generated_codes[code]
 
-        if not code.startswith("SUMU-") and details['user_id'] != user_id:
+        if not code.startswith("NAC-") and details['user_id'] != user_id:
             await message.reply_text("You can only redeem the codes you generated.")
             return
 
