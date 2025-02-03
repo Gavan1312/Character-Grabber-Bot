@@ -36,7 +36,7 @@ async def save(client: Client, message: Message):
         await deduct(user_id, amount)
         await abank(user_id, amount)
 
-        await message.reply_text(capsify(f"You saved {currency_symbols['balance']}{amount} Love Points in your Heart."))
+        await message.reply_text(capsify(f"You saved {currency_symbols['balance']}`{amount}` Love Points in your Heart."))
     else:
         await message.reply_text(capsify("User data not found."))
 
@@ -65,7 +65,7 @@ async def withdraw(client: Client, message: Message):
         await add(user_id, amount)
         await dbank(user_id, amount)
 
-        await message.reply_text(capsify(f"You withdrew {currency_symbols['balance']}{amount} Love Points from your Heart."))
+        await message.reply_text(capsify(f"You withdrew {currency_symbols['balance']}`{amount}` Love Points from your Heart."))
     else:
         await message.reply_text(capsify("User data not found."))
 
@@ -159,14 +159,14 @@ async def repay(client: Client, message: Message):
             overdue_hours = (current_time - loan_due_date).total_seconds() / 3600
             penalty = math.ceil(overdue_hours) * (loan_amount * 0.05)
             repayment_amount += penalty
-            await message.reply_text(capsify(f"You have a penalty of {currency_symbols['balance']}{penalty:.2f}Love Points due to late repayment."))
+            await message.reply_text(capsify(f"You have a penalty of {currency_symbols['balance']}`{penalty:.2f}` Love Points due to late repayment."))
 
         new_loan_amount = loan_amount - repayment_amount
 
         await user_collection.update_one({'id': user_id}, {'$set': {'loan_amount': new_loan_amount}})
         await deduct(user_id, repayment_amount)
 
-        await message.reply_text(capsify(f"You successfully repaid {currency_symbols['balance']}{repayment_amount}Love Points of your loan."))
+        await message.reply_text(capsify(f"You successfully repaid {currency_symbols['balance']}`{repayment_amount}`Love Points of your loan."))
     else:
         await message.reply_text(capsify("User data not found."))
 

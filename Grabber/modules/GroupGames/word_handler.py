@@ -35,7 +35,7 @@ async def on_message(client, message):
         guess_start_time[chat_id] = time.time()
 
         image_bytes = generate_random_word_image(random_word)
-        keyboard = [[IKB("Support", url="https://t.me/support"), IKB("Play", url="https://t.me/play")]]
+        keyboard = [[IKB("Support", url=f"https://t.me/{SUPPORT_CHAT}"), IKB("Play", url=f"https://t.me/{PLAY_CHAT}")]]
         reply_markup = IKM(keyboard)
 
         await client.send_photo(chat_id, photo=image_bytes, caption="Guess the word!", reply_markup=reply_markup)

@@ -56,7 +56,7 @@ async def gamble(client, message):
     await message.reply_text(message_text)
     
 
-@app.on_message(filters.command("betlove"))
+@app.on_message(filters.command(["betlove", "betlp","lpbet"]))
 @block_dec
 async def gamble(client, message):
     user_id = message.from_user.id
