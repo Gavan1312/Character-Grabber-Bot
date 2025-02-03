@@ -11,7 +11,7 @@ TOKEN = "7719563669:AAE52i6MX7NCCJkrYJ42a0OT_rqFPKjxTIo"
 
 api_id = 28124559
 api_hash = "efc605d197c57b8adbb77bed4c2dac01"
-PHOTO_URL = ["https://github.com/Gavan1312/Character-Grabber-Bot/blob/main/Images/bot-icon.jpg?raw=true%22%20data-hpc=%22true"]
+PHOTO_URL = ["https://github.com/Gavan1312/Character-Grabber-Bot/blob/main/Images/bg-rep.jpg?raw=true%22%20data-hpc=%22true"]
 Video_Show_for_start = False
 SUPPORT_CHAT = "Gomu_Gomu_Syndicate"
 PLAY_CHAT = "Log_Pose_To_Laughtale"
