@@ -5,7 +5,7 @@ from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton as IKB, InlineKeyboardMarkup as IKM
 from Grabber import app, group_user_totals_collection
 from Grabber.utils.bal import add
-from Grabber.modules.Utility.image_utils import generate_random_math_image
+from Grabber.modules.Utility.image_utils import *
 from words import words
 from Grabber.modules.watchers import gend_watcher
 

@@ -1,158 +1,104 @@
 import re
-import time
-from cachetools import TTLCache
-from pymongo import DESCENDING
-import asyncio
+from Grabber import app
+from pyrogram import Client
+from pyrogram.types import InlineQuery, InlineQueryResultArticle, InputTextMessageContent, InlineKeyboardMarkup, InlineKeyboardButton,InlineQueryResultPhoto
 
-from telegram import Update
-from telegram.ext import InlineQueryHandler, CallbackContext, CallbackQueryHandler,CommandHandler
-from telegram import InlineKeyboardButton as IKB, InlineKeyboardMarkup as IKM, InlineQueryResultPhoto as IQP
+from Grabber.modules import user_collection, collection, application, db, capsify
+from Grabber.modules.Settings.rarityMap import *
 
-from . import user_collection, collection, application, db, capsify
-from .block import block_inl_ptb
-from .Settings.rarityMap import *
-
-lock = asyncio.Lock()
-db.characters.create_index([('id', DESCENDING)])
-db.characters.create_index([('anime', DESCENDING)])
-db.characters.create_index([('img_url', DESCENDING)])
-
-db.user_collection.create_index([('characters.id', DESCENDING)])
-db.user_collection.create_index([('characters.name', DESCENDING)])
-db.user_collection.create_index([('characters.img_url', DESCENDING)])
-
-all_characters_cache = TTLCache(maxsize=10000, ttl=36000)
-user_collection_cache = TTLCache(maxsize=10000, ttl=60)
-
-rarity_map = RARITY_TO_USE_SYMBOL_MAPPING
-
-def clear_all_caches():
-    all_characters_cache.clear()
-    user_collection_cache.clear()
-
-clear_all_caches()
-
-@block_inl_ptb
-async def inlinequery(update: Update, context: CallbackContext) -> None:
-    start_time = time.time()
-    query = update.inline_query.query.strip()
-    offset = int(update.inline_query.offset) if update.inline_query.offset else 0
+@app.on_inline_query()
+async def inlinequery(client: Client, query: InlineQuery):
+    # print(f"[DEBUG] Inline Query Triggered: '{query.query.strip()}'") 
+    search_query = query.query.strip()
+    offset = int(query.offset) if query.offset else 0
     results_per_page = 15
     start_index = offset
     end_index = offset + results_per_page
-    all_characters = []
 
-    if not query:
-        if 'all_characters' in all_characters_cache:
-            all_characters = all_characters_cache['all_characters']
-        else:
-            all_characters = await collection.find(
-                {}, 
-                {'name': 1, 'anime': 1, 'img_url': 1, 'id': 1, 'rarity': 1, 'price': 1}
-            ).to_list(length=None)
-            all_characters_cache['all_characters'] = all_characters
-    elif query.isdigit():
-        character_id = int(query)
-        all_characters = await collection.find(
-            {'id': {"$in": [character_id, str(character_id)]}},  
-            {'name': 1, 'anime': 1, 'img_url': 1, 'id': 1, 'rarity': 1, 'price': 1}
-        ).to_list(length=None)
-    elif query.startswith('collection.'):
-        parts = query.split('.')
-        user_id = parts[1]
-        rarity_filter = parts[2] if len(parts) > 2 else None
-        if user_id.isdigit():
-            if user_id in user_collection_cache:
-                user = user_collection_cache[user_id]
-            else:
-                user = await user_collection.find_one(
-                    {'id': int(user_id)},
-                    {'characters': 1, 'first_name': 1}
-                )
-                user_collection_cache[user_id] = user
-            if user:
-                all_characters = {v['id']: v for v in user.get('characters', [])}.values()
-                if rarity_filter:
-                    rarity_name = rarity_map.get(rarity_filter, rarity_filter.capitalize())
-                    all_characters = [
-                        character for character in all_characters
-                        if character.get('rarity', '').lower() == rarity_name.lower()
-                    ]
-    else:
-        regex = re.compile(query, re.IGNORECASE)
-        all_characters = await collection.find(
-            {"$or": [{"name": regex}, {"anime": regex}]},
-            {'name': 1, 'anime': 1, 'img_url': 1, 'id': 1, 'rarity': 1, 'price': 1}
-        ).to_list(length=None)
-
-    characters = list(all_characters)[start_index:end_index]
-    character_ids = [character['id'] for character in characters]
-    anime_names = list(set(character['anime'] for character in characters))
-
-    global_counts = await user_collection.aggregate([
-        {"$match": {"characters.id": {"$in": character_ids}}},
-        {"$unwind": "$characters"},
-        {"$match": {"characters.id": {"$in": character_ids}}},
-        {"$group": {"_id": "$characters.id", "count": {"$sum": 1}}}
-    ]).to_list(length=None)
-
-    anime_counts = await collection.aggregate([
-        {"$match": {"anime": {"$in": anime_names}}},
-        {"$group": {"_id": "$anime", "count": {"$sum": 1}}}
-    ]).to_list(length=None)
-
-    global_count_dict = {item['_id']: item['count'] for item in global_counts}
-    anime_count_dict = {item['_id']: item['count'] for item in anime_counts}
-    next_offset = str(end_index) if len(characters) == results_per_page else ""
-    results = []
-
-    for character in characters:
-        global_count = global_count_dict.get(character['id'], 0)
-        anime_characters = anime_count_dict.get(character['anime'], 0)
-        price = character.get('price', 'Unknown')
-
-        if query.startswith('collection.'):
-            user_character_count = sum(1 for c in user.get('characters', []) if c['id'] == character['id'])
-            user_anime_characters = sum(1 for c in user.get('characters', []) if c['anime'] == character['anime'])
-            user_id_str = str(user.get('id', 'unknown'))
-            user_first_name = user.get('first_name', user_id_str)
-            caption = (
-                f"{capsify('Character from')} {capsify(user_first_name)}'s {capsify('collection')}:\n\n"
-                f"{capsify('Name')}: {character['name']} (x{user_character_count})\n"
-                f"{capsify('Anime')}: {character['anime']} ({user_anime_characters}/{anime_characters})\n"
-                f"{capsify('Rarity')}: {character.get('rarity', '')}\n"
-                f"{capsify('Price')}: {price}\n"
-                f"{capsify('ID')}: {character['id']}"
-            )
-        else:
-            caption = (
-                f"{capsify('Character details')}:\n\n"
-                f"{capsify('Name')}: {character['name']}\n"
-                f"{capsify('Anime')}: {character['anime']}\n"
-                f"{capsify('ID')}: {character['id']}\n"
-                f"{capsify('Rarity')}: {character.get('rarity', '')}\n"
-                f"{capsify('Price')}: {price}"
-            )
-
-        keyboard = [[IKB(capsify("How many I have ❓"), callback_data=f"check_{character['id']}")]]
-        reply_markup = IKM(keyboard)
-
-        results.append(
-            IQP(
-                thumbnail_url=character['img_url'],
-                id=f"{character['id']}_{time.time()}",
-                photo_url=character['img_url'],
-                caption=caption,
-                photo_width=300,
-                photo_height=300,
-                reply_markup=reply_markup
-            )
-        )
+    # print(f"[DEBUG] Inline Query Received: '{search_query}' (Offset: {offset})")  # Debug
 
     try:
-        await update.inline_query.answer(results, next_offset=next_offset, cache_time=5)
-    except Exception as e:
-        print(f"Error answering inline query: {e}")
+        if search_query.isdigit():
+            filter_query = {'id': {"$in": [int(search_query), search_query]}}
+        else:
+            regex = re.compile(search_query, re.IGNORECASE)
+            filter_query = {"$or": [{"name": regex}, {"anime": regex}]}
 
-application.add_handler(InlineQueryHandler(inlinequery, block=False))
-application.add_handler(CommandHandler('clearcacheofinline', clear_all_caches, block=False))
+        all_characters = await collection.find(
+            filter_query,
+            {'name': 1, 'anime': 1, 'img_url': 1, 'id': 1, 'rarity': 1, 'price': 1}
+        ).skip(start_index).limit(results_per_page).to_list(length=None)
+
+        # print(f"[DEBUG] Characters Found: {len(all_characters)}")  # Debug
+
+        # You can pass the chat_id manually if you are triggering this from a group chat
+        chat_id = query.from_user.id  # This is the user's id, not the chat's id
+
+        results = [
+            InlineQueryResultPhoto(
+                id=str(character['id']),
+                photo_url=character['img_url'],  # URL of the character image (thumbnail)
+                thumb_url=character['img_url'],  # Small image for the thumbnail (could be a lower resolution version)
+                title=character['name'],
+                description=f"Anime: {character['anime']} | Rarity: {character.get('rarity', '')}",
+                input_message_content=InputTextMessageContent(
+                    f"Click below to view {character['name']} in the group chat."
+                ),
+                reply_markup=InlineKeyboardMarkup([
+                    [
+                        InlineKeyboardButton(
+                            "View Character 😍", 
+                            callback_data=f"view_{character['id']}_{query.from_user.id}"  # Pass chat_id here
+                        )
+                    ]
+                ])
+            ) for character in all_characters
+        ]
+
+        next_offset = str(end_index) if len(results) == results_per_page else ""
+        await query.answer(results, next_offset=next_offset, cache_time=5)
+
+        # print(f"[DEBUG] Inline Query Answered Successfully.")  # Debug
+
+    except Exception as e:
+        # print(f"[ERROR] Inline Query Failed: {e}")  # Debug
+
+@app.on_callback_query()
+async def button_click(client, callback_query):
+    data = callback_query.data
+    # print(f"[DEBUG] Callback Query Received: {data}")  # Debug
+
+    if data.startswith("view_"):
+        try:
+            # Split callback data to get the character ID and chat_id
+            parts = data.split("_")
+            char_id = str(parts[1])
+            chat_id = int(parts[2])  # Extract chat_id passed in callback_data
+
+            # print(f"[DEBUG] Fetching Character ID: {char_id} for Chat ID: {chat_id}")  # Debug
+            
+            character = await collection.find_one({'id': char_id})
+            
+            if character:
+                # print(f"[DEBUG] Character Found: {character['name']}")  # Debug
+                
+                reply_to_message_id = callback_query.message.id if callback_query.message else None
+
+                # Send the character details to the same group chat (using chat_id from callback_data)
+                await client.send_photo(
+                    chat_id=chat_id,  # Send message to the group chat
+                    reply_to_message_id=reply_to_message_id,  # Replies to the original message
+                    photo=character['img_url'],
+                    caption=f"**Name:** {character['name']}\n"
+                            f"**Anime:** {character['anime']}\n"
+                            f"**Rarity:** {character.get('rarity', '')}",
+                    protect_content=True  # 🔒 Protecting Content
+                )
+                # print(f"[DEBUG] Image Sent to Group Chat ID: {chat_id}.")  # Debug
+            else:
+                # print(f"[WARNING] Character Not Found for ID: {char_id}")  # Debug
+
+            await callback_query.answer()
+
+        except Exception as e:
+            # print(f"[ERROR] Callback Query Failed: {e}")  # Debug
