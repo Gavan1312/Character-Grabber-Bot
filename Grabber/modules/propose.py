@@ -8,18 +8,14 @@ from . import add as add_balance, deduct as deduct_balance, app, capsify
 from .block import block_dec, temp_block
 from Grabber.config import *
 from Grabber.config_settings import *
+from Grabber.modules.Settings.rarityMap import *
 
-rarity_map = {
-    "🟢 Common": True,
-    "🔵 Medium": True,
-    "🟠 Rare": True,
-    "🟡 Legendary": True
-}
+rarity_map = RARITY_TO_USE_FOR_CONFESS
 
 last_propose_times = {}
 proposing_users = {}
 propose_cooldown = 300 
-
+IN_DEV_MODE = False
 if(IN_DEV_MODE):
     propose_cooldown = 1
 

@@ -9,7 +9,7 @@ from .block import temp_block, block_dec, block_cbq
 from Grabber.config import *
 from pyrogram.types import InlineKeyboardButton as IKB, InlineKeyboardMarkup as IKM
 from Grabber.utils.realuserdetails import *
-from .Settings.rarityMap import *
+from Grabber.modules.Settings.rarityMap import *
 
 message_counts = {}
 spawn_locks = {}

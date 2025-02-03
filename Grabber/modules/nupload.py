@@ -6,7 +6,7 @@ import random
 from . import uploader_filter, app, user_collection
 from Grabber import collection, db, CHARA_CHANNEL_ID, OWNER_ID
 from Grabber.modules.UploaderPanel.upload_catbox import upload_to_catbox
-from .Settings.rarityMap import *
+from Grabber.modules.Settings.rarityMap import *
 
 async def get_next_sequence_number(sequence_name):
     sequence_collection = db.sequences
@@ -21,23 +21,7 @@ async def get_next_sequence_number(sequence_name):
     return sequence_document['sequence_value']
 
 
-rarity_map = {
-    1: "🟢 Common",
-    2: "🔵 Medium",
-    3: "🟠 Rare",
-    4: "🟡 Legendary",
-    5: "🎐 Celestial",
-    6: "🥵 Divine",
-    7: "🥴 Special",
-    8: "💮 Exclusive",
-    9: "🔮 Limited",
-    10: "🍭 Cosplay",
-    11: "💋 Aura",
-    12: "❄️ Winter",
-    13: "⚡ Drip",
-    14: "🍥 Retro"
-}
-
+rarity_map = RARITY_TO_USE_NUMBER_MAPPING
 
 @app.on_message(filters.command('upload') & uploader_filter)
 async def upload(client: Client, message: Message):
