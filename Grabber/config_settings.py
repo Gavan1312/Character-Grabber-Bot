@@ -5,29 +5,29 @@ from Grabber.config import OWNER_ID
 currency_symbols = {
     "xp": "Level ",        
     "balance": "Ƀ",   
-    "gold": "𝒢",      
-    "rubies": "Ⓡ"     
+    "rubies": "Ⓡ",     
+    "gold": "𝒢"      
 }
 
 currency_names = {
     "xp": "Level ",        
     "balance": "Love Point",   
-    "gold": "Gold",      
-    "rubies": "Ruby"     
+    "rubies": "HeartStone",      
+    "gold": "SoulGem"      
 }
 
 currency_names_plural = {
     "xp": "Level ",        
     "balance": "Love Points",   
-    "gold": "Gold",     
-    "rubies": "Rubies"    
+    "rubies": "HeartStones", 
+    "gold": "SoulGems"    
 }
 
 currency_bag_title = {
     "xp": "Level ",        
     "balance": "💟 Love Stash",   
-    "gold": "Gold",     
-    "rubies": "Rubies"    
+    "gold": "🧿 SoulGem Hoard",     
+    "rubies": "☄️ HeartStone Cache"    
 }
 
 IN_DEV_MODE = False

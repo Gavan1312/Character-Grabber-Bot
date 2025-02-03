@@ -1,20 +1,26 @@
 from pyrogram import filters, Client
-from pyrogram.types import InlineKeyboardButton as IKB, InlineKeyboardMarkup as IKM, CallbackQuery
+from pyrogram.types import InlineKeyboardButton as IKB, InlineKeyboardMarkup as IKM, CallbackQuery, Message
 from Grabber import app, user_collection
 import random
-from . import aruby, druby, sruby, capsify, nopvt, limit
+from . import aruby, druby, sruby, capsify, nopvt, limit, dev_filter
 import time
 import asyncio
 from .block import block_dec, temp_block, block_cbq
+from Grabber.config_settings import * 
+from Grabber.config import OWNER_ID
+
+MINING_COOLDOWN_PERIOD = 300
+FULL_BOARD_SIZE = 9
+SINGLE_LINE_SIZE = 3
 
 def generate_minefield(size, bombs):
-    minefield = ['💎'] * size
+    minefield = ['☄️'] * size
     bomb_positions = random.sample(range(size), bombs)
     for pos in bomb_positions:
-        minefield[pos] = '💣'
+        minefield[pos] = '☢'
     return minefield
 
-@app.on_message(filters.command("mines"))
+@app.on_message(filters.command("crystalize"))
 @block_dec
 async def mines(client, message):
     user_id = message.from_user.id
@@ -23,8 +29,8 @@ async def mines(client, message):
     user_data = await user_collection.find_one({"id": user_id})
     last_game_time = user_data.get("last_game_time", 0) if user_data else 0
 
-    if time.time() - last_game_time < 300:
-        remaining_time = int(300 - (time.time() - last_game_time))
+    if time.time() - last_game_time < MINING_COOLDOWN_PERIOD:
+        remaining_time = int(MINING_COOLDOWN_PERIOD - (time.time() - last_game_time))
         await message.reply_text(capsify(f"Please wait {remaining_time} seconds before starting a new game."))
         return
 
@@ -32,24 +38,25 @@ async def mines(client, message):
         amount = int(message.command[1])
         bombs = int(message.command[2])
         if amount < 1 or bombs < 1:
-            raise ValueError("Invalid bet amount or bomb count.")
+            raise ValueError("Invalid bet amount or Blasters count.")
     except (IndexError, ValueError):
-        await message.reply_text(capsify("Use /mines [amount] [bombs]"))
+        await message.reply_text(capsify("Use /crystalize [amount] [Blasters]"))
         return
 
     user_balance = await sruby(user_id)
     max_bet = int(user_balance * 0.5)
     if amount > max_bet:
-        await message.reply_text(capsify(f"Your bet amount cannot exceed 50% of your total rubies. The maximum bet is {max_bet} rubies."))
+        await message.reply_text(capsify(f"Your bet amount cannot exceed 50% of your total {currency_names_plural['rubies']}. The maximum bet is {max_bet} {currency_names_plural['rubies']}."))
         return
 
     if user_balance < amount:
-        await message.reply_text(capsify("Insufficient rubies to make the bet."))
+        await message.reply_text(capsify(f"Insufficient {currency_names_plural['rubies']} to make the bet."))
         return
 
-    size = 25
+    size = FULL_BOARD_SIZE
     minefield = generate_minefield(size, bombs)
-    base_multiplier = bombs / 10
+    # base_multiplier = bombs / 10
+    base_multiplier = 0
 
     game_data = {
         "amount": amount,
@@ -57,18 +64,18 @@ async def mines(client, message):
         "revealed": [False] * size,
         "bombs": bombs,
         "game_active": True,
-        "multiplier": 1 + base_multiplier
+        "multiplier": 0 + base_multiplier
     }
 
     await user_collection.update_one({"id": user_id}, {"$set": {"game_data": game_data}}, upsert=True)
 
     keyboard = [
-        [IKB(" ", callback_data=f"{user_id}_{i}") for i in range(j, j + 5)]
-        for j in range(0, size, 5)
+        [IKB(" ", callback_data=f"{user_id}_{i}") for i in range(j, j + SINGLE_LINE_SIZE)]
+        for j in range(0, size, SINGLE_LINE_SIZE)
     ]
     reply_markup = IKM(keyboard)
     await message.reply_text(
-        capsify(f"Choose a tile:\n\n**Current Multiplier:** {game_data['multiplier']:.2f}x\n**Bet Amount:** {amount} rubies"),
+        capsify(f"Choose a tile:\n\n**Current Multiplier:** {game_data['multiplier']:.2f}x\n**Bet Amount:** {amount} {currency_names_plural['rubies']}"),
         reply_markup=reply_markup
     )
 
@@ -110,10 +117,10 @@ async def mines_button(client, query: CallbackQuery):
 
     await asyncio.sleep(5)
 
-    if minefield[index] == '💣':
+    if minefield[index] == '☢':
         await druby(user_id, amount)
         await query.message.edit_text(
-            capsify(f"💣 You hit the bomb! Game over! You lost {amount} rubies."),
+            capsify(f"☢ You hit the Blasters! Game over! You lost {amount} {currency_names_plural['rubies']}."),
             reply_markup=None
         )
         await user_collection.update_one({"id": user_id}, {"$set": {"last_game_time": time.time(), "game_data": None}})
@@ -122,11 +129,11 @@ async def mines_button(client, query: CallbackQuery):
     multiplier += game_data["bombs"] / 10
     game_data["multiplier"] = multiplier
 
-    if all(revealed[i] or minefield[i] == '💣' for i in range(len(minefield))):
+    if all(revealed[i] or minefield[i] == '☢' for i in range(len(minefield))):
         winnings = int(amount * multiplier)
         await aruby(user_id, winnings)
         await query.message.edit_text(
-            capsify(f"🎉 You revealed all the safe tiles! You win {winnings} rubies!"),
+            capsify(f"🎉 You revealed all the safe tiles! You win {winnings} {currency_names_plural['rubies']}!"),
             reply_markup=None
         )
         await user_collection.update_one({"id": user_id}, {"$set": {"last_game_time": time.time(), "game_data": None}})
@@ -136,10 +143,10 @@ async def mines_button(client, query: CallbackQuery):
 
     keyboard = [
         [IKB(minefield[i] if revealed[i] else " ", callback_data=f"{user_id}_{i}")
-         for i in range(j, j + 5)]
-        for j in range(0, len(minefield), 5)
+         for i in range(j, j + SINGLE_LINE_SIZE)]
+        for j in range(0, len(minefield), SINGLE_LINE_SIZE)
     ]
-    keyboard.append([IKB(f"Cash Out ({int(amount * multiplier)} rubies)", callback_data=f"{user_id}_cash_out")])
+    keyboard.append([IKB(f"Cash Out ({int(amount * multiplier)} {currency_names_plural['rubies']})", callback_data=f"{user_id}_cash_out")])
     reply_markup = IKM(keyboard)
 
     await query.message.edit_text(
@@ -162,12 +169,36 @@ async def cash_out(client, query: CallbackQuery):
         return
 
     amount = game_data["amount"]
-    winnings = int(amount * game_data["multiplier"]) - amount
+    # winnings = int(amount * game_data["multiplier"]) - amount
+    winnings = int(amount * game_data["multiplier"])
     winnings = max(winnings, 0)
 
     await aruby(user_id, winnings)
     await query.message.edit_text(
-        capsify(f"💰 You cashed out! You won {winnings} rubies."),
+        capsify(f"💰 You cashed out! You won {winnings} {currency_names_plural['rubies']}."),
         reply_markup=None
     )
     await user_collection.update_one({"id": user_id}, {"$set": {"last_game_time": time.time(), "game_data": None}})
+    
+    
+@app.on_message(filters.command("changehscooldownperiod") & (dev_filter | filters.user(OWNER_ID)))
+async def change_hs_cooldown_period(client, message: Message):
+    # Split message text into parts
+    args = message.text.split()
+
+    # Ensure argument is provided
+    if len(args) < 2:
+        return await message.reply("⚠️ Please provide a cooldown period. Usage: /changehscooldownperiod <seconds>")
+
+    try:
+        # Convert argument to an integer
+        cooldown_period = int(args[1])
+
+        # Update global variable (if necessary)
+        global MINING_COOLDOWN_PERIOD
+        MINING_COOLDOWN_PERIOD = cooldown_period
+
+        await message.reply(f"✅ Mining cooldown period set to {MINING_COOLDOWN_PERIOD} seconds.")
+    
+    except ValueError:
+        await message.reply("⚠️ Invalid input! Please enter a valid number for the cooldown period.")
