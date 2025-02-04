@@ -90,7 +90,8 @@ async def button_click(client, callback_query):
                     photo=character['img_url'],
                     caption=f"**Name:** {character['name']}\n"
                             f"**Anime:** {character['anime']}\n"
-                            f"**Rarity:** {character.get('rarity', '')}",
+                            f"**Rarity:** {character.get('rarity', '')}\n"
+                            f"**Id:** {character.get('id', '')}",
                     protect_content=True  # 🔒 Protecting Content
                 )
                 # print(f"[DEBUG] Image Sent to Group Chat ID: {chat_id}.")  # Debug
