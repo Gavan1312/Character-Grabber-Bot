@@ -61,11 +61,12 @@ async def balance(client: Client, message: Message):
         formatted_balance = f"**💝 Love Points :** {currency_symbols['balance']}`{balance_amount:,.0f}`\n"
         formatted_saved = f"**💌 Hidden Affection :** {currency_symbols['balance']}`{saved_amount:,.0f}`\n"
         formatted_loan = f"**💔 Simp Debt :**  {currency_symbols['balance']}`{loan_amount:,.0f}`\n"
-        formatted_hs = f"**☄️ HeartStones :**  {currency_symbols['rubies']}`{ruby_amount:,.0f}`\n"
-        formatted_sg = f"**🧿 SoulGems :**  {currency_symbols['gold']}`{gold_amount:,.0f}`\n"
+        # formatted_hs = f"**☄️ HeartStones :**  {currency_symbols['rubies']}`{ruby_amount:,.0f}`\n"
+        # formatted_sg = f"**🧿 SoulGems :**  {currency_symbols['gold']}`{gold_amount:,.0f}`\n"
         formatted_description = f"\n💘 A treasure of passion!\n"
 
-        balance_message = formatted_title + formatted_balance + formatted_saved + formatted_loan + formatted_hs + formatted_sg + formatted_description;
+        # balance_message = formatted_title + formatted_balance + formatted_saved + formatted_loan + formatted_hs + formatted_sg + formatted_description;
+        balance_message = formatted_title + formatted_balance + formatted_saved + formatted_loan + formatted_description;
         balance_message = capsify(balance_message)
 
         await message.reply_text(balance_message)

@@ -24,7 +24,7 @@ async def guess(client, message: Message):
     chat_id = message.chat.id
 
     if chat_id in active_guesses:
-        await message.reply_text(capsify("A guessing game is already running in this chat!"))
+        await message.reply_text(capsify("A spot game is already running in this chat!"))
         return
 
     character = await get_random_character()
@@ -39,7 +39,7 @@ async def guess(client, message: Message):
     await client.send_photo(
         chat_id = chat_id,
         photo=character['img_url'],
-        caption=capsify(f"Spot the character's name! First one to guess correctly wins 20-30 {currency_names['rubies']}!"),
+        caption=capsify(f"Spot the character's name! First one to spot the character correctly wins 5-10 {currency_names['rubies']}!"),
         protect_content=True,
         reply_to_message_id=message.id
     )
@@ -78,12 +78,12 @@ async def check_guess(client, message: Message):
 
     if any(part in answer for part in name_parts):
         game_data['guessed'] = True
-        reward = random.randint(20, 30)
+        reward = random.randint(5, 10)
 
         await aruby(user_id, reward)
 
         await message.reply_text(
-            capsify(f"Congratulations {message.from_user.first_name}! 🎉 You guessed correctly and won {reward} {currency_names['rubies']}!")
+            capsify(f"Congratulations {message.from_user.first_name}! 🎉 You spotted correctly and won {reward} {currency_names['rubies']}!")
         )
 
         del active_guesses[chat_id]
@@ -102,9 +102,9 @@ async def xguess(client, message: Message):
 
     if chat_id in active_guesses:
         del active_guesses[chat_id]
-        await message.reply_text(capsify("The current guessing game has been terminated."))
+        await message.reply_text(capsify("The current spot game has been terminated."))
     else:
-        await message.reply_text(capsify("There is no active guessing game to terminate."))
+        await message.reply_text(capsify("There is no active spot game to terminate."))
 
 async def check_timeout(client, message: Message, chat_id):
     await asyncio.sleep(GUESS_TIMEOUT)

@@ -14,6 +14,7 @@ auction_message_counts = {}
 ongoing_auctions = {}
 auction_locks = {}
 auction_bids = {}
+AUCTION_TRIGGER_MESSAGE = 15000
 
 @app.on_message(filters.group, group=auction_watcher)
 async def check_auction_trigger(_, message):
@@ -26,7 +27,7 @@ async def check_auction_trigger(_, message):
     if not chat_modes.get('auction', True):
         return
     auction_message_counts[chat_id] = auction_message_counts.get(chat_id, 0) + 1
-    if auction_message_counts[chat_id] >= 150:
+    if auction_message_counts[chat_id] >= AUCTION_TRIGGER_MESSAGE:
         success = await start_auction(chat_id)
         if success:
             auction_message_counts[chat_id] = 0
