@@ -5,6 +5,7 @@ import random
 from datetime import datetime
 from pytz import timezone
 from . import aruby, capsify, sudo_filter, guess_watcher, nopvt, app, collection, limit, user_collection
+from Grabber.config_settings import *
 
 from .block import block_dec
 
@@ -17,7 +18,7 @@ async def get_random_character():
     all_characters = await collection.find({}).to_list(length=None)
     return random.choice(all_characters)
 
-@app.on_message(filters.command("guess"))
+@app.on_message(filters.command("spot"))
 @block_dec
 async def guess(client, message: Message):
     chat_id = message.chat.id
@@ -38,7 +39,7 @@ async def guess(client, message: Message):
     await client.send_photo(
         chat_id = chat_id,
         photo=character['img_url'],
-        caption=capsify("Guess the character's name! First one to guess correctly wins 20-30 Ruby!"),
+        caption=capsify(f"Spot the character's name! First one to guess correctly wins 20-30 {currency_names['rubies']}!"),
         protect_content=True,
         reply_to_message_id=message.id
     )
@@ -82,7 +83,7 @@ async def check_guess(client, message: Message):
         await aruby(user_id, reward)
 
         await message.reply_text(
-            capsify(f"Congratulations {message.from_user.first_name}! 🎉 You guessed correctly and won {reward} Ruby!")
+            capsify(f"Congratulations {message.from_user.first_name}! 🎉 You guessed correctly and won {reward} {currency_names['rubies']}!")
         )
 
         del active_guesses[chat_id]
@@ -94,7 +95,7 @@ async def check_guess(client, message: Message):
     else:
         return
 
-@app.on_message(filters.command("xguess") & sudo_filter)
+@app.on_message(filters.command("xspot") & sudo_filter)
 @block_dec
 async def xguess(client, message: Message):
     chat_id = message.chat.id
