@@ -11,7 +11,7 @@ from Grabber.config_settings import *
 cooldown_duration_dice = 90
 last_usage_time_dice = {}
 
-@app.on_message(filters.command(["roll"]))
+@app.on_message(filters.command(["roll","dice","dicey"]))
 @block_dec
 async def roll_dice(client: Client, message: t.Message):
     user_id = message.from_user.id

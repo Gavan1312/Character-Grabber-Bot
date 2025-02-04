@@ -22,7 +22,7 @@ async def get_next_sequence_number(sequence_name):
 
 rarity_map = RARITY_TO_USE_NUMBER_MAPPING
 
-@app.on_message(filters.command('delete') & sudo_filter)
+# @app.on_message(filters.command('delete') & sudo_filter)
 async def delete(client: Client, message: Message):
     args = message.text.split(maxsplit=1)[1:]
     if len(args) != 1:
