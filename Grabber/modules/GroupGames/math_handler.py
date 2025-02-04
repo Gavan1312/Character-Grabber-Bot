@@ -14,7 +14,7 @@ from Grabber.modules.watchers import delta_watcher
 math_questions = {}
 group_message_counts = {}
 
-DEFAULT_MESSAGE_LIMIT = 45
+DEFAULT_MESSAGE_LIMIT = 450000
 
 @app.on_message(filters.command("stime") & sudo_filter)
 async def set_message_limit(client, message):
