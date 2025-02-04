@@ -6,6 +6,7 @@ from .block import block_dec, temp_block
 from pyrogram.types import InlineKeyboardButton as IKB, InlineKeyboardMarkup as IKM
 from .cleantext import clean_text
 from Grabber.utils.realuserdetails import *
+from Grabber.config_settings import *
         
 @app.on_message(filters.command(["bal", "mystash"]))
 @block_dec
@@ -57,11 +58,11 @@ async def balance(client: Client, message: Message):
         formatted_title = f"**💕{safe_first_name}'s** ʟᴏᴠᴇ sᴛᴀsʜ 💕\n\n"
         # formatted_title = f"💕{first_name}'s Love Stash 💕\n\n"
         # formatted_title = "**💕{}'s** Love Stash 💕\n\n".format(safe_first_name)
-        formatted_balance = f"**💝 Love Points :** `{balance_amount:,.0f}`\n"
-        formatted_saved = f"**💌 Hidden Affection :** `{saved_amount:,.0f}`\n"
-        formatted_loan = f"**💔 Simp Debt :** `{loan_amount:,.0f}`\n"
-        formatted_hs = f"**☄️ HeartStones :** `{gold_amount:,.0f}`\n"
-        formatted_sg = f"**🧿 SoulGems :** `{ruby_amount:,.0f}`\n"
+        formatted_balance = f"**💝 Love Points :** {currency_symbols['balance']}`{balance_amount:,.0f}`\n"
+        formatted_saved = f"**💌 Hidden Affection :** {currency_symbols['balance']}`{saved_amount:,.0f}`\n"
+        formatted_loan = f"**💔 Simp Debt :**  {currency_symbols['balance']}`{loan_amount:,.0f}`\n"
+        formatted_hs = f"**☄️ HeartStones :**  {currency_symbols['rubies']}`{ruby_amount:,.0f}`\n"
+        formatted_sg = f"**🧿 SoulGems :**  {currency_symbols['gold']}`{gold_amount:,.0f}`\n"
         formatted_description = f"\n💘 A treasure of passion!\n"
 
         balance_message = formatted_title + formatted_balance + formatted_saved + formatted_loan + formatted_hs + formatted_sg + formatted_description;

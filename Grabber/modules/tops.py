@@ -5,6 +5,7 @@ from . import app, collection, user_collection, capsify
 from .profile import custom_format_number
 from .block import block_dec, temp_block, block_cbq
 from Grabber.config_settings import *
+from Grabber.utils.realuserdetails import *
 
 XP_PER_LEVEL = 10
 
@@ -55,8 +56,15 @@ async def show_top_list(client, callback_query):
             value = custom_format_number(float(user[list_type].replace(',', ''))) if isinstance(user[list_type], str) else custom_format_number(user[list_type])
 
         first_name = user.get('first_name', 'unknown')
+        user_id = int(user.get('id',0))
         first_word = first_name.split()[0] if ' ' in first_name else first_name
-        top_users_message += f"{index + 1}. {first_word} - {currency_symbols[list_type]}{value}\n"
+        # top_users_message += f"{index + 1}. {first_word} - {currency_symbols[list_type]}{value}\n"
+        # top_users_message += f"{index + 1}. {await get_mention_of_user_by_id(user.get('id', '0'))} - {currency_symbols[list_type]}{value}\n"
+        if user_id != 0:  # Check if user_id is valid (non-zero)
+            top_users_message += f"{index + 1}. [{first_word}](tg://user?id={user_id}) - {currency_symbols[list_type]}{value}\n"
+            # print(f"{first_word} - {user_id}\n")
+        else:  
+            top_users_message += f"{index + 1}. {first_word} - {currency_symbols[list_type]}{value}\n"
 
     buttons = [[IKB(capsify("🔙 Back"), callback_data="back_to_menu")]]
     reply_markup = IKM(buttons)
