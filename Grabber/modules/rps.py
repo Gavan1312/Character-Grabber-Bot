@@ -67,7 +67,7 @@ async def rps_button(update, context):
     updated_balance = await show_balance(user_id)
 
     await query.message.edit_text(
-        f"You chose {choice.capitalize()} and the computer chose {computer_choice.capitalize()}\n\n.\n{result_message} Your updated balance is {updated_balance}\n\nPlay again?",
+        f"You chose {choice.capitalize()} and the computer chose {computer_choice.capitalize()}\n\n.\n{result_message} Your updated balance is {updated_balance:,.0f}\n\nPlay again?",
         reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Play Again 🔄", callback_data='play_again')]])
     )
 

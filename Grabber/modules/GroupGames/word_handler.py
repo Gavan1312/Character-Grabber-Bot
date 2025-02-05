@@ -54,7 +54,7 @@ async def on_message(client, message):
 
         # await client.send_photo(chat_id, photo=image_bytes, caption="Guess the word!", reply_markup=reply_markup)
         # await client.send_message(chat_id, text=f"Guess the word: {shifted_word}", reply_markup=reply_markup)
-        await client.send_message(chat_id, text=f"Say the character's name right - true fans know the difference! 😉🔥:\n{processed_word}\n And Win LP to add to your Love Stash !🎊\n")
+        await client.send_message(chat_id, text=f"Say the character's name right, true fans know the difference! 😉\n**{processed_word}**\nWin LP to add to your Love Stash !🎊\n")
 
 @app.on_message(filters.text & filters.group)
 async def handle_guess(client, message):
@@ -66,7 +66,7 @@ async def handle_guess(client, message):
         await add(message.from_user.id, reward)
 
         await message.reply(
-            f"✨Correct!✨ You earned {reward} {currency_names_plural['balance']}! 💖"
+            f"✨Correct!✨ You earned {reward:,.0f} {currency_names_plural['balance']}! 💖"
         )
 
         # Remove the guessed word to prevent duplicate guesses

@@ -49,7 +49,8 @@ async def show_top_list(client, callback_query):
     top_users_message = f"{capsify('💞 Top 10 Lovers by')} {type_label} 💞\n\n"
     for index, user in enumerate(sorted_users):
         if list_type == "balance":
-            value = custom_format_number(float(user['balance'].replace(',', ''))) if isinstance(user['balance'], str) else custom_format_number(user['balance'])
+            # value = custom_format_number(float(user['balance'].replace(',', ''))) if isinstance(user['balance'], str) else custom_format_number(user['balance'])
+            value = f"{user['balance']:,.0f}"
         elif list_type == "xp":
             value = user[list_type] // XP_PER_LEVEL
         else:

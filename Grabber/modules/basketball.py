@@ -47,7 +47,7 @@ async def roll_dart(client: Client, message: t.Message):
 
     min_bet_amount = int(bal * 0.05)
     if basket_amount < min_bet_amount:
-        return await message.reply_text(f"Please bet at least 5% of your {currency_names_plural['balance']}, which is {currency_symbols['balance']}`{min_bet_amount}`.")
+        return await message.reply_text(f"Please bet at least 5% of your {currency_names_plural['balance']}, which is {currency_symbols['balance']}`{min_bet_amount:,.0f}`.")
 
     value = await client.send_dice(chat_id=message.chat.id, emoji="🏀")
 
@@ -57,11 +57,11 @@ async def roll_dart(client: Client, message: t.Message):
     
     if dice_result in [4, 5]: # Winning only if the dice rolls a 6
         await add(user_id, basket_amount)
-        await message.reply_text(f"[🏀] You're lucky!\nYou won {currency_symbols['balance']}`{basket_amount}`")
+        await message.reply_text(f"[🏀] You're lucky!\nYou won {currency_symbols['balance']}`{basket_amount:,.0f}`")
         await add_xp(user_id, 2)
     else:
         await deduct(user_id, basket_amount)
-        await message.reply_text(f"[🍷] Better luck next time!\nYou lost {currency_symbols['balance']}`{basket_amount}`")
+        await message.reply_text(f"[🍷] Better luck next time!\nYou lost {currency_symbols['balance']}`{basket_amount:,.0f}`")
         # await deduct_xp(user_id, 2)
 
     last_usage_time_roll[user_id] = current_time

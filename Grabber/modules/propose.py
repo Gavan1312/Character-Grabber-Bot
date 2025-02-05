@@ -29,7 +29,7 @@ async def propose(client, message: Message):
     user_data = await user_collection.find_one({'id': user_id})
 
     if not user_data or int(user_data.get('balance', 0)) < 20000:
-        await message.reply_text(capsify("You need at least 20000 tokens to confess your love."))
+        await message.reply_text(capsify("You need at least 20,000 tokens to confess your love."))
         proposing_users[user_id] = False
         return
 
