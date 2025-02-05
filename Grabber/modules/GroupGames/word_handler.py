@@ -6,7 +6,7 @@ from pyrogram.types import InlineKeyboardButton as IKB, InlineKeyboardMarkup as 
 from Grabber import app, group_user_totals_collection
 from Grabber.utils.bal import add
 from Grabber.modules.Utility.image_utils import *
-from words import words
+from Grabber.modules.GroupGames.words import words
 from Grabber.modules.watchers import gend_watcher
 
 from Grabber.utils.bal  import add, deduct, show
@@ -58,7 +58,7 @@ async def on_message(client, message):
 
         # await client.send_photo(chat_id, photo=image_bytes, caption="Guess the word!", reply_markup=reply_markup)
         # await client.send_message(chat_id, text=f"Guess the word: {shifted_word}", reply_markup=reply_markup)
-        await client.send_message(chat_id, text=f"Guess the word: {processed_word}")
+        await client.send_message(chat_id, text=f"Guess the Waifu Name Correctly: {processed_word}\n And Win LP to add to your Love Stash!🎊")
 
 @app.on_message(filters.text)
 async def handle_guess(client, message):
