@@ -6,12 +6,11 @@ from pyrogram.types import InlineKeyboardButton as IKB, InlineKeyboardMarkup as 
 from Grabber import app, group_user_totals_collection
 from Grabber.utils.bal import add
 from Grabber.modules.Utility.image_utils import *
-from Grabber.modules.GroupGames.words import words
+from Grabber.modules.GroupGames.wordlist import word_list_of_characters
 from Grabber.modules.watchers import gend_watcher
 
 from Grabber.utils.bal  import add, deduct, show
 from Grabber.modules import group_user_totals_collection,sudb
-from words import words
 from Grabber.config import *
 from Grabber.config_settings import *
 
@@ -47,7 +46,7 @@ async def on_message(client, message):
     if group_message_counts[chat_id]['count'] >= group_message_counts[chat_id]['limit']:
         group_message_counts[chat_id]['count'] = 0
 
-        random_word = random.choice(words)
+        random_word = random.choice(word_list_of_characters)
         processed_word = shuffle_characters(random_word)
         alpha_dict[chat_id] = random_word
         guess_start_time[chat_id] = time.time()
