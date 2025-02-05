@@ -29,7 +29,7 @@ async def propose(client, message: Message):
     user_data = await user_collection.find_one({'id': user_id})
 
     if not user_data or int(user_data.get('balance', 0)) < 20000:
-        await message.reply_text(capsify("You need at least 20000 tokens to confess your love."))
+        await message.reply_text(capsify(f"You need at least 20,000 {currency_names['balance']} to confess your love."))
         proposing_users[user_id] = False
         return
 
@@ -83,9 +83,9 @@ async def propose(client, message: Message):
         )
     else:
         all_characters = list(await collection.find({}).to_list(length=None))
-        print(all_characters)
+        # print(all_characters)
         valid_characters = [char for char in all_characters if char.get('rarity') in rarity_map.keys()]
-        print(valid_characters)
+        # print(valid_characters)
 
         if not valid_characters:
             await message.reply_text(capsify("No characters available with the specified rarity."))

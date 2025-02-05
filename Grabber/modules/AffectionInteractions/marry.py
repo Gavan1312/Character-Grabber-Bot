@@ -59,7 +59,7 @@ async def get_unique_characters(receiver_id, target_rarities=['ðŸŸ¢ Common', 'ðŸ
 async def send_error_report(client, message, error_message):
     report_message = (
         f"{capsify('Error')}: {error_message}\n"
-        f"{capsify('Please report this issue')}: @YourSupportBot"
+        f"{capsify('Please report this issue')}: @SupportBot"
     )
     await client.send_message(
         chat_id=message.chat.id,

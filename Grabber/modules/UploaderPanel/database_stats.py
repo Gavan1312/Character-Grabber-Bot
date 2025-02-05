@@ -17,6 +17,9 @@ async def character_list_stats(client: Client, message: Message):
                 "_id": "$rarity",  # Group by rarity text
                 "count": {"$sum": 1}  # Count occurrences of each rarity
             }
+        },
+        {
+            "$sort": {"count": 1}  # Sort by count in ascending order (1 for ASC, -1 for DESC)
         }
     ]
 
