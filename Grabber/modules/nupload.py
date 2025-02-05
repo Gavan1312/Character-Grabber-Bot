@@ -86,7 +86,7 @@ async def upload(client: Client, message: Message):
     except Exception as e:
         await message.reply_text(f"An error occurred: {str(e)}")
 
-@app.on_message(filters.command('upload_with_upscale') & uploader_filter)
+@app.on_message(filters.command(['upload_with_upscale','upload_with_quality']) & uploader_filter)
 async def upload_with_upscale(client: Client, message: Message):
     if not message.reply_to_message or not message.reply_to_message.photo:
         await message.reply_text("Please reply to an image with the caption in the format: 'Name - Name Here\nAnime - Anime Here\nRarity - Number'")
