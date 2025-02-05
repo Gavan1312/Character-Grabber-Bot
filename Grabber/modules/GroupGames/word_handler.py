@@ -55,6 +55,7 @@ async def on_message(client, message):
         # await client.send_photo(chat_id, photo=image_bytes, caption="Guess the word!", reply_markup=reply_markup)
         # await client.send_message(chat_id, text=f"Guess the word: {shifted_word}", reply_markup=reply_markup)
         await client.send_message(chat_id, text=f"Say the character's name right, true fans know the difference! 😉\n**{processed_word}**\nWin LP to add to your Love Stash !🎊\n")
+        await client.send_message(chat_id, text=f"Say the character's name right,\nTrue fans know the difference! 😉\n**{processed_word}**\nWin LP and increase your Love Stash !🎊\n")
 
 @app.on_message(filters.text & filters.group)
 async def handle_guess(client, message):
