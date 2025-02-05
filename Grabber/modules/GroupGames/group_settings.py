@@ -2,7 +2,6 @@ import random
 import io
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton as IKB, InlineKeyboardMarkup as IKM
-from Grabber import app, group_user_totals_collection
 from Grabber.utils.bal import add
 from Grabber.modules.block import block_cbq
 from Grabber.modules.Utility.image_utils import generate_random_math_image
