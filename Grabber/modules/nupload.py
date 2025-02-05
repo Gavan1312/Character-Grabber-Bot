@@ -122,14 +122,15 @@ async def character_list_stats(client: Client, message: Message):
         }
     ]
 
-    rarity_counts = list(collection.aggregate(pipeline))
+    cursor = collection.aggregate(pipeline)  # Async cursor
+    rarity_counts = await cursor.to_list(None)  # Convert cursor to list
 
     if not rarity_counts:
         await message.reply_text("No character rarity stats available.")
         return
 
     # Format the message text
-    stats_message = "**Character Rarity Stats:**\n"
+    stats_message = "**Character Rarity Stats:**\n\n"
     for rarity in rarity_counts:
         stats_message += f"**{rarity['_id']}**: {rarity['count']} characters\n"
 
