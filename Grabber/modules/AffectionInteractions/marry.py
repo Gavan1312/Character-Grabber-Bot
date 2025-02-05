@@ -2,8 +2,8 @@ import asyncio
 import random
 import time
 from pyrogram import Client, filters
-from . import user_collection, collection, capsify, app, db
-from .block import block_dec, temp_block
+from Grabber.modules import user_collection, collection, capsify, app, db
+from Grabber.modules.block import block_dec, temp_block
 from datetime import datetime
 from Grabber.config import *
 from Grabber.config_settings import *

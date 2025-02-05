@@ -4,8 +4,8 @@ from pyrogram.types import Message
 import random
 from datetime import datetime, timedelta
 from Grabber import collection, user_collection, user_totals_collection
-from . import add as add_balance, deduct as deduct_balance, app, capsify
-from .block import block_dec, temp_block
+from Grabber.modules import add as add_balance, deduct as deduct_balance, app, capsify
+from Grabber.modules.block import block_dec, temp_block
 from Grabber.config import *
 from Grabber.config_settings import *
 from Grabber.modules.Settings.rarityMap import *
