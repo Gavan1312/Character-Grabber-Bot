@@ -110,13 +110,23 @@ async def upload_with_upscale(client: Client, message: Message):
 async def character_list_stats(client: Client, message: Message):
     pipeline = [
         {
+            "$match": {
+                "rarity": {"$exists": True, "$ne": None}  # Only include documents with a non-null rarity
+            }
+        },
+        {
             "$group": {
-                "_id": "$rarity",  # Group by rarity
-                "count": {"$sum": 1}  # Count the number of occurrences of each rarity
+                "_id": "$rarity",  # Group by rarity text
+                "count": {"$sum": 1}  # Count occurrences of each rarity
             }
         }
     ]
+
     rarity_counts = list(collection.aggregate(pipeline))
+
+    if not rarity_counts:
+        await message.reply_text("No character rarity stats available.")
+        return
 
     # Format the message text
     stats_message = "**Character Rarity Stats:**\n"
@@ -125,3 +135,4 @@ async def character_list_stats(client: Client, message: Message):
 
     # Send the message
     await message.reply_text(stats_message)
+
