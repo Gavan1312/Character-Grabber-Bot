@@ -21,6 +21,12 @@ guess_start_time = {}
 group_message_counts = {}
 DEFAULT_MESSAGE_LIMIT = 30
 
+def shuffle_characters(word):
+    """Shuffle characters of the word randomly"""
+    word_list = list(word)
+    random.shuffle(word_list)
+    return ''.join(word_list)
+
 def shift_characters(word):
     """Shift characters of the word by a random amount"""
     shifted_word = []
@@ -42,7 +48,7 @@ async def on_message(client, message):
         group_message_counts[chat_id]['count'] = 0
 
         random_word = random.choice(words)
-        shifted_word = shift_characters(random_word)
+        processed_word = shuffle_characters(random_word)
         alpha_dict[chat_id] = random_word
         guess_start_time[chat_id] = time.time()
 
@@ -52,7 +58,7 @@ async def on_message(client, message):
 
         # await client.send_photo(chat_id, photo=image_bytes, caption="Guess the word!", reply_markup=reply_markup)
         # await client.send_message(chat_id, text=f"Guess the word: {shifted_word}", reply_markup=reply_markup)
-        await client.send_message(chat_id, text=f"Guess the word: {shifted_word}")
+        await client.send_message(chat_id, text=f"Guess the word: {processed_word}")
 
 @app.on_message(filters.text)
 async def handle_guess(client, message):

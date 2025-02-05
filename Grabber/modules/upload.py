@@ -3,9 +3,8 @@ from pyrogram.types import Message
 from pymongo import ReturnDocument, UpdateOne
 import urllib.request
 import random
-from Grabber.modules import sudo_filter
+from Grabber.modules import sudo_filter,uploader_filter
 from Grabber import application, collection, db, CHARA_CHANNEL_ID, user_collection, app
-from Grabber.modules import uploader_filter
 from Grabber.modules.Settings.rarityMap import *
 
 async def get_next_sequence_number(sequence_name):

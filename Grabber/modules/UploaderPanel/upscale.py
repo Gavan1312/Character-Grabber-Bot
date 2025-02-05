@@ -1,9 +1,9 @@
 from pyrogram import Client, filters
 import base64
 import aiohttp
-from . import app
+from Grabber.modules import app, uploader_filter
 
-@app.on_message(filters.command("upscale"))
+@app.on_message(filters.command("upscale") & uploader_filter)
 async def upscale_image(client, message):
     #3.7 for glitch
     reply = message.reply_to_message
