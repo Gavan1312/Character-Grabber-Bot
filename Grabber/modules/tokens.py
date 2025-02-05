@@ -17,7 +17,7 @@ async def addt(client: Client, message: Message):
     user = await user_collection.find_one({'id': user_id})
     updated_balance = int(user.get("balance", 0))
 
-    await message.reply_text(f"Success! {amount} Tokens added to user {user_id}. Updated balance: {updated_balance} Tokens.")
+    await message.reply_text(f"Success! {amount:,.0f} Tokens added to user {user_id}. Updated balance: {updated_balance} Tokens.")
 
 @app.on_message(filters.command("removet") & dev_filter)
 async def removet(client: Client, message: Message):
@@ -33,7 +33,7 @@ async def removet(client: Client, message: Message):
     user = await user_collection.find_one({'id': user_id})
     updated_balance = int(user.get("balance", 0))
 
-    await message.reply_text(f"Success! {amount} Tokens removed from user {user_id}. Updated balance: {updated_balance} Tokens.")
+    await message.reply_text(f"Success! {amount:,.0f} Tokens removed from user {user_id}. Updated balance: {updated_balance} Tokens.")
 
 @app.on_message(filters.command("reset") & dev_filter)
 async def reset_balances(client: Client, message: Message):

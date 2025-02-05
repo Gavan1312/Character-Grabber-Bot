@@ -42,7 +42,7 @@ async def daily_code(client, message: Message):
     response_text = (
         f"Your daily code:\n"
         f"`{code}`\n"
-        f"Amount: `{amount}`\n"
+        f"Amount: `{amount:,.0f}`\n"
         f"Quantity: {quantity}"
     )
     await message.reply_text(response_text)
@@ -66,14 +66,14 @@ async def gen(client, message: Message):
         f"**New Code Generated**\n\n"
         f"**Thanks to:** `{message.from_user.first_name}`\n"
         f"**Code:** `{code}`\n"
-        f"**Amount:** `{amount}`\n"
+        f"**Amount:** `{amount:,.0f}`\n"
         f"**Quantity:** {quantity}"
     )
 
     response_text = (
         f"Generated code:\n"
         f"`{code}`\n"
-        f"Amount: `{amount}`\n"
+        f"Amount: `{amount:,.0f}`\n"
         f"Quantity: {quantity}"
     )
     await message.reply_text(response_text)
@@ -112,7 +112,7 @@ async def redeem(client, message: Message):
                 del generated_codes[code]
 
             await message.reply_text(
-                f"Code redeemed successfully. {currency_symbols['balance']}`{amount}` {currency_names_plural['balance']}  added to your {currency_bag_title['balance']}. Remaining quantity: {details['quantity']}"
+                f"Code redeemed successfully. {currency_symbols['balance']}`{amount:,.0f}` {currency_names_plural['balance']}  added to your {currency_bag_title['balance']}. Remaining quantity: {details['quantity']}"
             )
         else:
             await message.reply_text("This code has already been redeemed the maximum number of times.")

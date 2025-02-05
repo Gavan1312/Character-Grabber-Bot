@@ -3,14 +3,11 @@ import io
 import time
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton as IKB, InlineKeyboardMarkup as IKM
-from Grabber import app, group_user_totals_collection
-from Grabber.utils.bal import add
 from Grabber.modules.Utility.image_utils import *
 from Grabber.modules.GroupGames.wordlist import word_list_of_characters
 from Grabber.modules.watchers import gend_watcher
 
-from Grabber.utils.bal  import add, deduct, show
-from Grabber.modules import group_user_totals_collection,sudb
+from Grabber.modules import group_user_totals_collection,sudb,app,add, deduct, show
 from Grabber.config import *
 from Grabber.config_settings import *
 
@@ -18,7 +15,7 @@ from Grabber.config_settings import *
 alpha_dict = {}
 guess_start_time = {}
 group_message_counts = {}
-DEFAULT_MESSAGE_LIMIT = 30
+DEFAULT_MESSAGE_LIMIT = 25
 
 def shuffle_characters(word):
     """Shuffle characters of the word randomly"""
@@ -57,12 +54,22 @@ async def on_message(client, message):
 
         # await client.send_photo(chat_id, photo=image_bytes, caption="Guess the word!", reply_markup=reply_markup)
         # await client.send_message(chat_id, text=f"Guess the word: {shifted_word}", reply_markup=reply_markup)
+        await client.send_message(chat_id, text=f"Say the character's name right, true fans know the difference! 😉\n**{processed_word}**\nWin LP to add to your Love Stash !🎊\n")
         await client.send_message(chat_id, text=f"Say the character's name right,\nTrue fans know the difference! 😉\n**{processed_word}**\nWin LP and increase your Love Stash !🎊\n")
 
-@app.on_message(filters.text)
+@app.on_message(filters.text & filters.group)
 async def handle_guess(client, message):
     chat_id = message.chat.id
-    if chat_id in alpha_dict and message.text.strip().lower() == alpha_dict[chat_id]:
+    user_guess = message.text.strip().lower()
+
+    if chat_id in alpha_dict and user_guess == alpha_dict[chat_id].lower():
         reward = random.randint(20000, 40000)
         await add(message.from_user.id, reward)
-        await message.reply(f"Correct! You earned {reward} {currency_names_plural['balance']}")
+
+        await message.reply(
+            f"✨Correct!✨ You earned {reward:,.0f} {currency_names_plural['balance']}! 💖"
+        )
+
+        # Remove the guessed word to prevent duplicate guesses
+        del alpha_dict[chat_id]
+        del guess_start_time[chat_id]  
