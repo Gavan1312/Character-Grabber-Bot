@@ -60,7 +60,7 @@ async def upload_character(client, message, img_url, character_name, anime, rari
         'name': character_name,
         'anime': anime,
         'rarity': rarity,
-        'price': price,
+        # 'price': price,
         'id': id,
         'message_id': sent_message.id
     }

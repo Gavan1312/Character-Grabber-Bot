@@ -58,7 +58,7 @@ async def upscale_image(client, message, caption_type=None):
 async def upscale_command(client, message):
     await upscale_image(client, message)
 
-@app.on_message(filters.command("upscalewithid") & uploader_filter)
+@app.on_message(filters.command("upscale_with_id") & uploader_filter)
 async def upscale_with_id_command(client, message):
     await upscale_image(client, message, caption_type="id")
 
