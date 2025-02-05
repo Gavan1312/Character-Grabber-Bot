@@ -1,15 +1,16 @@
 import random
-import io
+import html
+
 from pyrogram import Client, filters
-from pyrogram.types import InlineKeyboardButton as IKB, InlineKeyboardMarkup as IKM
 from Grabber import app, group_user_totals_collection
 from Grabber.utils.bal import add
 from Grabber.modules.block import block_cbq
 from Grabber.modules.Utility.image_utils import generate_random_math_image
 
 from Grabber import user_collection, collection
-from Grabber.modules import add, deduct, show, abank, dbank, sbank, sudb, capsify, app, sudo_filter, group_user_totals_collection
+from Grabber.modules import add, deduct, show, abank, dbank, sbank, sudb, capsify, app, sudo_filter, group_user_totals_collection, capsify
 from Grabber.modules.watchers import delta_watcher
+from Grabber.utils.sudo import *
 
 math_questions = {}
 group_message_counts = {}
@@ -34,6 +35,35 @@ async def set_message_limit(client, message):
     except (IndexError, ValueError):
         await message.reply_text(capsify("Please provide a valid message limit (integer)."))
 
+async def generate_random_math_equation():
+    # Define possible operators
+    operators = ['+', '-', '*']
+
+    # Randomly select two numbers and an operator
+    num1 = random.randint(1, 20)
+    num2 = random.randint(1, 20)
+    operator = random.choice(operators)
+
+    # Ensure no division by zero
+    if operator == '/':
+        num2 = random.randint(1, 20)  # Ensure non-zero divisor
+
+    # Generate the equation and calculate the answer
+    equation = f"{num1} {operator} {num2}"
+
+    # Perform the calculation based on the operator
+    if operator == '+':
+        answer = num1 + num2
+    elif operator == '-':
+        answer = num1 - num2
+    elif operator == '*':
+        answer = num1 * num2
+    elif operator == '/':
+        # Ensure the answer is an integer
+        answer = num1 // num2  # Use floor division for integer result
+
+    return equation, answer
+
 @app.on_message(filters.group, group=delta_watcher)
 async def delta(client, message):
     chat_id = message.chat.id
@@ -47,38 +77,35 @@ async def delta(client, message):
         if not chat_modes.get('maths', True):
             return
 
-        image_bytes, answer = generate_random_math_image()
+        question, answer = await generate_random_math_equation()  # This function can return a text question now.
         math_questions[chat_id] = answer
 
-        keyboard = [
-            [IKB(str(answer), callback_data='correct')],
-            [IKB(str(random.randint(100, 999)), callback_data='incorrect1')],
-            [IKB(str(random.randint(100, 999)), callback_data='incorrect2')],
-            [IKB(str(random.randint(100, 999)), callback_data='incorrect3')]
-        ]
-        random.shuffle(keyboard)
-        reply_markup = IKM([[keyboard[0][0], keyboard[1][0]], [keyboard[2][0], keyboard[3][0]]])
+        # Ensure that the text is safe for HTML parsing
+        question = html.escape(question)  # This will escape any HTML special characters
 
-        await client.send_photo(
-            chat_id=chat_id,
-            photo=io.BytesIO(image_bytes),
-            caption=capsify("Solve the math equation!"),
-            reply_markup=reply_markup
+        # Send the math equation as text
+        await client.send_message(
+            chat_id, 
+            text=f"Time to test your brainpower! 🧠\nSolve this math equation and prove it! 🤓\n\n**{question}**\n\nReply with the correct answer to Win LP and increase your Love Stash !🎊\n"
         )
 
-@app.on_callback_query(filters.regex('correct|incorrect'))
-@block_cbq
-async def sumu(client, callback_query):
-    chat_id = callback_query.message.chat.id
+@app.on_message(filters.group & filters.reply)
+async def check_reply(client, message):
+    chat_id = message.chat.id
+
     if chat_id not in math_questions:
         return
 
-    if callback_query.data == 'correct':
+    if message.text == str(math_questions[chat_id]):
         reward = random.randint(20000, 40000)
-        await callback_query.answer(capsify(f"Correct! You earned {reward} 🔖"), show_alert=True)
-        await add(callback_query.from_user.id, reward)
+        
+        await message.reply(
+            f"✨Correct!✨ You earned {reward:,.0f} {currency_names_plural['balance']}! 💖"
+        )
+        
+        await add(message.from_user.id, reward)
     else:
-        await callback_query.answer(capsify("Incorrect! Try again later."), show_alert=True)
+        await message.reply_text(capsify("Incorrect! Try again later."))
 
+    # Remove the current question from the math_questions dictionary
     del math_questions[chat_id]
-    await callback_query.message.edit_caption(caption=capsify("Math equation solved!"), reply_markup=None)

@@ -50,7 +50,7 @@ async def show_top_list(client, callback_query):
     for index, user in enumerate(sorted_users):
         if list_type == "balance":
             # value = custom_format_number(float(user['balance'].replace(',', ''))) if isinstance(user['balance'], str) else custom_format_number(user['balance'])
-            value = f"{user['balance']:,.0f}"
+            value = f"{float(user['balance']):,.0f}"
         elif list_type == "xp":
             value = user[list_type] // XP_PER_LEVEL
         else:
@@ -62,7 +62,11 @@ async def show_top_list(client, callback_query):
         # top_users_message += f"{index + 1}. {first_word} - {currency_symbols[list_type]}{value}\n"
         # top_users_message += f"{index + 1}. {await get_mention_of_user_by_id(user.get('id', '0'))} - {currency_symbols[list_type]}{value}\n"
         if user_id != 0:  # Check if user_id is valid (non-zero)
-            top_users_message += f"{index + 1}. [{first_word}](tg://user?id={user_id}) - {currency_symbols[list_type]}{value}\n"
+            top_users_message += f"{index + 1}. [{first_word}](tg://user?id={user_id}) - {currency_symbols[list_type]}"
+            if(list_type == "xp"):
+                 top_users_message += f"{value}\n"
+            else:
+                 top_users_message += f"`{value}`\n"
             # print(f"{first_word} - {user_id}\n")
         else:  
             top_users_message += f"{index + 1}. {first_word} - {currency_symbols[list_type]}{value}\n"
