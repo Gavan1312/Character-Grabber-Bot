@@ -104,3 +104,24 @@ async def upload_with_upscale(client: Client, message: Message):
         await upload_character(client, message, img_url, character_name, anime, rarity)
     except Exception as e:
         await message.reply_text(f"An error occurred: {str(e)}")
+        
+        
+@app.on_message(filters.command('character_list_stats') & uploader_filter)
+async def character_list_stats(client: Client, message: Message):
+    pipeline = [
+        {
+            "$group": {
+                "_id": "$rarity",  # Group by rarity
+                "count": {"$sum": 1}  # Count the number of occurrences of each rarity
+            }
+        }
+    ]
+    rarity_counts = list(collection.aggregate(pipeline))
+
+    # Format the message text
+    stats_message = "**Character Rarity Stats:**\n"
+    for rarity in rarity_counts:
+        stats_message += f"**{rarity['_id']}**: {rarity['count']} characters\n"
+
+    # Send the message
+    await message.reply_text(stats_message)
