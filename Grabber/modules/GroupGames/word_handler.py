@@ -7,15 +7,36 @@ from Grabber.modules.Utility.image_utils import *
 from Grabber.modules.GroupGames.wordlist import word_list_of_characters
 from Grabber.modules.watchers import gend_watcher
 
-from Grabber.modules import group_user_totals_collection,sudb,app,add, deduct, show
+from Grabber.modules import group_user_totals_collection,sudb,app,add, deduct, show,sudo_filter,capsify
 from Grabber.config import *
 from Grabber.config_settings import *
+from Grabber.utils.sudo import *
 
 
 alpha_dict = {}
 guess_start_time = {}
 group_message_counts = {}
 DEFAULT_MESSAGE_LIMIT = 25
+
+
+@app.on_message(filters.command("wtime") & sudo_filter)
+async def set_word_message_limit(client, message):
+    user_id = message.from_user.id
+    if user_id not in await get_sudo_user_ids():
+        await message.reply_text(capsify("Only sudo users can set the message limit!"))
+        return
+
+    try:
+        limit = int(message.command[1])
+        if limit <= 0:
+            await message.reply_text(capsify("Message limit must be a positive integer!"))
+            return
+
+        group_message_counts[message.chat.id] = {'count': 0, 'limit': limit}
+        await message.reply_text(capsify(f"Message limit set to {limit}. Now spawning word every {limit} messages!"))
+    except (IndexError, ValueError):
+        await message.reply_text(capsify("Please provide a valid message limit (integer)."))
+
 
 def shuffle_characters(word):
     """Shuffle characters of the word randomly"""
@@ -54,10 +75,9 @@ async def on_message(client, message):
 
         # await client.send_photo(chat_id, photo=image_bytes, caption="Guess the word!", reply_markup=reply_markup)
         # await client.send_message(chat_id, text=f"Guess the word: {shifted_word}", reply_markup=reply_markup)
-        await client.send_message(chat_id, text=f"Say the character's name right, true fans know the difference! 😉\n**{processed_word}**\nWin LP to add to your Love Stash !🎊\n")
-        await client.send_message(chat_id, text=f"Say the character's name right,\nTrue fans know the difference! 😉\n**{processed_word}**\nWin LP and increase your Love Stash !🎊\n")
+        await client.send_message(chat_id, text=f"Say the character's name right,\nTrue fans know the difference! 😉\n**{processed_word}**\nReply with the correct answer to Win LP and increase your Love Stash !🎊\n")
 
-@app.on_message(filters.text & filters.group)
+@app.on_message(filters.group & filters.reply)
 async def handle_guess(client, message):
     chat_id = message.chat.id
     user_guess = message.text.strip().lower()
