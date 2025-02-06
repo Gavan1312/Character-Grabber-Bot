@@ -7,7 +7,7 @@ GROUP_ID = "-1002366780756"
 # TOKEN = os.getenv("BOT_TOKEN")
 # api_id = os.getenv("DEV_API_ID")
 # api_hash = os.getenv("DEV_API_HASH")
-TOKEN = "7412154805:AAFj0hKoduUXVyWHQwctmzVeXV88-NH4lJE"
+TOKEN = "7412154805:AAH_pzC9_lUfUGmkCH3tWr1AFCCWoDEzH88"
 
 api_id = 28124559
 api_hash = "efc605d197c57b8adbb77bed4c2dac01"

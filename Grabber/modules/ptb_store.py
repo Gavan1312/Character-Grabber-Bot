@@ -99,7 +99,7 @@ async def store_handler(_, message):
     ])
 
     # await message.reply_photo(img, caption=capsify(f"**Page 1/3**\n\n{caption}"), reply_markup=markup)
-    await client.send_photo(
+    await _.send_photo(
         chat_id=message.chat.id,
         photo=img,
         caption=capsify(f"**Page 1/3**\n\n{caption}"),
