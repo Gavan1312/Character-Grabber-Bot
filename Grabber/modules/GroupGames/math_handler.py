@@ -105,8 +105,6 @@ async def check_reply(client, message):
         )
         
         await add(message.from_user.id, reward)
-    else:
-        await message.reply_text(capsify("Incorrect! Try again later."))
-
+        
     # Remove the current question from the math_questions dictionary
     del math_questions[chat_id]
