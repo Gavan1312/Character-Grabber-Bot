@@ -109,22 +109,3 @@ async def check_reply(client, message):
         
         # Remove the current question from the math_questions dictionary
         del math_questions[chat_id]
-
-@app.on_message(filters.group)
-async def handle_guess(client, message):
-    chat_id = message.chat.id
-    user_guess = message.text.strip().lower()
-
-    if chat_id in alpha_dict:
-        correct_answer = alpha_dict[chat_id].lower()
-        if user_guess == correct_answer:
-            reward = random.randint(20000, 40000)
-            await add(message.from_user.id, reward)
-
-            await message.reply(
-                f"✨Correct!✨ You earned {reward:,.0f} {currency_names_plural['balance']}! 💖"
-            )
-
-            # Remove the guessed word to prevent duplicate guesses
-            del alpha_dict[chat_id]
-            del guess_start_time[chat_id]
