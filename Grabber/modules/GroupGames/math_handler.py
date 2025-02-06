@@ -11,11 +11,12 @@ from Grabber import user_collection, collection
 from Grabber.modules import add, deduct, show, abank, dbank, sbank, sudb, capsify, app, sudo_filter, group_user_totals_collection, capsify
 from Grabber.modules.watchers import delta_watcher
 from Grabber.utils.sudo import *
+from Grabber.config_settings import *
 
 math_questions = {}
 group_message_counts = {}
 
-DEFAULT_MESSAGE_LIMIT = 450000
+DEFAULT_MESSAGE_LIMIT = 30
 
 @app.on_message(filters.command("stime") & sudo_filter)
 async def set_message_limit(client, message):

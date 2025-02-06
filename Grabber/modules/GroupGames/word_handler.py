@@ -77,19 +77,21 @@ async def on_message(client, message):
         # await client.send_message(chat_id, text=f"Guess the word: {shifted_word}", reply_markup=reply_markup)
         await client.send_message(chat_id, text=f"Say the character's name right,\nTrue fans know the difference! 😉\n**{processed_word}**\nReply with the correct answer to Win LP and increase your Love Stash !🎊\n")
 
-@app.on_message(filters.group & filters.reply)
+@app.on_message(filters.group)
 async def handle_guess(client, message):
     chat_id = message.chat.id
     user_guess = message.text.strip().lower()
 
-    if chat_id in alpha_dict and user_guess == alpha_dict[chat_id].lower():
-        reward = random.randint(20000, 40000)
-        await add(message.from_user.id, reward)
+    if chat_id in alpha_dict:
+        correct_answer = alpha_dict[chat_id].lower()
+        if user_guess == correct_answer:
+            reward = random.randint(20000, 40000)
+            await add(message.from_user.id, reward)
 
-        await message.reply(
-            f"✨Correct!✨ You earned {reward:,.0f} {currency_names_plural['balance']}! 💖"
-        )
+            await message.reply(
+                f"✨Correct!✨ You earned {reward:,.0f} {currency_names_plural['balance']}! 💖"
+            )
 
-        # Remove the guessed word to prevent duplicate guesses
-        del alpha_dict[chat_id]
-        del guess_start_time[chat_id]  
+            # Remove the guessed word to prevent duplicate guesses
+            del alpha_dict[chat_id]
+            del guess_start_time[chat_id]
