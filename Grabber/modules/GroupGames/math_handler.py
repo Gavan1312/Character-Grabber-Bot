@@ -79,8 +79,8 @@ async def delta(client, message):
             return
 
         question, answer = await generate_random_math_equation()  # This function can return a text question now.
-        if math_questions[chat_id]:
-            del math_questions[chat_id]         
+        if math_questions.get(chat_id):
+            del math_questions[chat_id]
         math_questions[chat_id] = answer
 
         # Ensure that the text is safe for HTML parsing
