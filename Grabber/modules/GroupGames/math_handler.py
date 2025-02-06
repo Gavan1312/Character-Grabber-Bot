@@ -90,7 +90,7 @@ async def delta(client, message):
             text=f"Time to test your brainpower! 🧠\nSolve this math equation and prove it! 🤓\n\n**{question}**\n\nReply with the correct answer to Win LP and increase your Love Stash !🎊\n"
         )
 
-@app.on_message(filters.group & filters.reply)
+@app.on_message(filters.group)
 async def check_reply(client, message):
     chat_id = message.chat.id
 

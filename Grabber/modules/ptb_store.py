@@ -95,15 +95,23 @@ async def store_handler(_, message):
             IKB(capsify("Buy 🔖"), callback_data=f"buy_{user_id}_0"),
             IKB(capsify("➡️"), callback_data=f"page_{user_id}_2")
         ],
-        [IKB(capsify("Close 🗑️"), callback_data=f"clos_{user_id}")]
+        [IKB(capsify("🗑️"), callback_data=f"clos_{user_id}")]
     ])
 
-    await message.reply_photo(img, caption=capsify(f"**Page 1/3**\n\n{caption}"), reply_markup=markup)
-
+    # await message.reply_photo(img, caption=capsify(f"**Page 1/3**\n\n{caption}"), reply_markup=markup)
+    await client.send_photo(
+        chat_id=message.chat.id,
+        photo=img,
+        caption=capsify(f"**Page 1/3**\n\n{caption}"),
+        reply_to_message_id=message.id,
+        protect_content = True, 
+        reply_markup=markup
+    )
 
 @app.on_callback_query(filters.regex(r"^page_"))
 @block_cbq
 async def page_handler(_, query):
+    print('page btn clicked')
     _, user_id, page = query.data.split("_")
     if int(user_id) != query.from_user.id:
         return await query.answer(capsify("this is not for you, baka!"), show_alert=True)
@@ -137,6 +145,7 @@ async def page_handler(_, query):
 @app.on_callback_query(filters.regex(r"^buy_"))
 @block_cbq
 async def buy_handler(_, query):
+    print('buy clicked')
     _, user_id, char_index = query.data.split("_")
     if int(user_id) != query.from_user.id:
         return await query.answer(capsify("this is not for you, baka!"), show_alert=True)
@@ -168,6 +177,7 @@ async def buy_handler(_, query):
 @app.on_callback_query(filters.regex(r"^con_"))
 @block_cbq
 async def confirm_handler(_, query):
+    print('confirm clicked')
     _, user_id, char_id = query.data.split("_")
     if int(user_id) != query.from_user.id:
         return await query.answer(capsify("this is not for you, baka!"), show_alert=True)
@@ -216,6 +226,7 @@ async def confirm_handler(_, query):
 @app.on_callback_query(filters.regex(r"^clos_"))
 @block_cbq
 async def close_handler(_, query):
+    print('close clicked')
     _, user_id = query.data.split("_")
     if int(user_id) == query.from_user.id:
         await query.message.delete()

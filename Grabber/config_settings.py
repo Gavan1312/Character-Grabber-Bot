@@ -11,9 +11,9 @@ currency_symbols = {
 
 currency_names = {
     "xp": "Level ",        
-    "balance": "Love Point",   
-    "rubies": "HeartStone",      
-    "gold": "SoulGem"      
+    "balance": "𝓛𝓟",   # Stylish font for Love Points
+    "rubies": "𝒽𝒮",   # Stylish font for HeartStone
+    "gold": "𝒮𝒢"      # Stylish font for SoulGem    
 }
 
 currency_names_plural = {
