@@ -95,6 +95,8 @@ async def delta(client, message):
 @app.on_message(filters.group)
 async def check_reply(client, message):
     chat_id = message.chat.id
+    print("math")
+    print(message.text)
 
     if chat_id not in math_questions:
         return

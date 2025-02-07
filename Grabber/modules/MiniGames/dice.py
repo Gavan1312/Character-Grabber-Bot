@@ -3,12 +3,12 @@ import time
 import asyncio
 from pyrogram import Client
 from Grabber import application, user_collection
-from Grabber.modules.bank import add, deduct, show, app
+from Grabber.modules import add, deduct, show, app
 from Grabber.modules.block import block_dec
 from Grabber.modules.xp import add_xp, deduct_xp
 from Grabber.config_settings import *
 
-cooldown_duration_dice = 90
+cooldown_duration_dice = 60
 last_usage_time_dice = {}
 
 @app.on_message(filters.command(["roll","dice","dicey"]))
