@@ -17,3 +17,6 @@ psutil
 nekos.py
 tgcrypto 
 aiofiles
+m3u8
+beautifulsoup4 
+yt-dlp
