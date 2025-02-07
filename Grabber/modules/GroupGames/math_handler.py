@@ -12,6 +12,7 @@ from Grabber.modules import add, deduct, show, abank, dbank, sbank, sudb, capsif
 from Grabber.modules.watchers import delta_watcher
 from Grabber.utils.sudo import *
 from Grabber.config_settings import *
+from Grabber.modules.GroupGames.word_handler import *
 
 math_questions = {}
 group_message_counts = {}
@@ -95,13 +96,14 @@ async def delta(client, message):
 @app.on_message(filters.group)
 async def check_reply(client, message):
     chat_id = message.chat.id
-    print("math")
-    print(message.text)
+    # print("math")
+    # print(message.text)
 
-    if chat_id not in math_questions:
+    if chat_id not in math_questions and chat_id not in alpha_dict:
         return
 
-    if message.text == str(math_questions[chat_id]):
+    expected_answer = math_questions.get(chat_id)
+    if expected_answer and message.text == str(expected_answer):
         reward = random.randint(20000, 40000)
         
         await message.reply(
@@ -112,3 +114,5 @@ async def check_reply(client, message):
         
         # Remove the current question from the math_questions dictionary
         del math_questions[chat_id]
+        
+    await handle_guess_word(client,message)

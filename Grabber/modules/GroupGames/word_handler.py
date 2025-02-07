@@ -14,8 +14,8 @@ from Grabber.utils.sudo import *
 
 alpha_dict = {}
 guess_start_time = {}
-group_message_counts = {}
-DEFAULT_MESSAGE_WORD_LIMIT = 5
+group_message_counts_for_word = {}
+DEFAULT_MESSAGE_WORD_LIMIT = 25
 
 
 def shuffle_characters(word):
@@ -37,18 +37,13 @@ def shift_characters(word):
 
 @app.on_message(filters.command("wtime") & sudo_filter)
 async def set_message_limit(client, message):
-    user_id = message.from_user.id
-    if user_id not in await get_sudo_user_ids():
-        await message.reply_text(capsify("Only sudo users can set the message limit!"))
-        return
-
     try:
         limit = int(message.command[1])
         if limit <= 0:
             await message.reply_text(capsify("Message limit must be a positive integer!"))
             return
 
-        group_message_counts[message.chat.id] = {'count': 0, 'limit': limit}
+        group_message_counts_for_word[message.chat.id] = {'count': 0, 'limit': limit}
         await message.reply_text(capsify(f"Message limit set to {limit}. Now spawning words every {limit} messages!"))
     except (IndexError, ValueError):
         await message.reply_text(capsify("Please provide a valid message limit (integer)."))
@@ -56,11 +51,11 @@ async def set_message_limit(client, message):
 @app.on_message(filters.text, group=gend_watcher)
 async def on_message(client, message):
     chat_id = message.chat.id
-    group_message_counts.setdefault(chat_id, {'count': 0, 'limit': DEFAULT_MESSAGE_WORD_LIMIT})
-    group_message_counts[chat_id]['count'] += 1
+    group_message_counts_for_word.setdefault(chat_id, {'count': 0, 'limit': DEFAULT_MESSAGE_WORD_LIMIT})
+    group_message_counts_for_word[chat_id]['count'] += 1
 
-    if group_message_counts[chat_id]['count'] >= group_message_counts[chat_id]['limit']:
-        group_message_counts[chat_id]['count'] = 0
+    if group_message_counts_for_word[chat_id]['count'] >= group_message_counts_for_word[chat_id]['limit']:
+        group_message_counts_for_word[chat_id]['count'] = 0
 
         random_word = random.choice(word_list_of_characters)
         processed_word = shuffle_characters(random_word)
@@ -79,16 +74,17 @@ async def on_message(client, message):
         await client.send_message(chat_id, text=f"Say the character's name right,\nTrue fans know the difference! 😉\n**{processed_word}**\nReply with the correct answer to Win LP and increase your Love Stash !🎊\n")
 
 
-@app.on_message(filters.group & filters.reply)
+# @app.on_message(filters.group & filters.reply)
 async def handle_guess_word(client, message):
     chat_id = message.chat.id
-    print("word")
-    print(message.text)
+    # print("word")
+    # print(message.text)
+    # print(alpha_dict)
 
     if chat_id not in alpha_dict:
         return
 
-    if message.text == str(alpha_dict[chat_id]):
+    if message.text.lower() == str(alpha_dict[chat_id]).lower():
         reward = random.randint(20000, 40000)
         
         await message.reply(
