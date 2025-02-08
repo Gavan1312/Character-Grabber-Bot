@@ -12,7 +12,6 @@ cooldown_duration_dice = 60
 last_usage_time_dice = {}
 
 @app.on_message(filters.command(["roll","dice","dicey"]))
-@block_dec
 async def roll_dice(client: Client, message: t.Message):
     user_id = message.from_user.id
     current_time = time.time()

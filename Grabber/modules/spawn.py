@@ -10,6 +10,7 @@ from Grabber.config import *
 from pyrogram.types import InlineKeyboardButton as IKB, InlineKeyboardMarkup as IKM
 from Grabber.utils.realuserdetails import *
 from Grabber.modules.Settings.rarityMap import *
+from Grabber.modules.Utility.cleantext import clean_text
 
 message_counts = {}
 spawn_locks = {}
@@ -117,7 +118,7 @@ async def guess(_, message):
         chat_locks[chat_id] = Lock()
     async with chat_locks[chat_id]:
         args = message.text.split(maxsplit=1)[1] if len(message.text.split()) > 1 else None
-        if not args or "()" in args or "&" in args:
+        if not args or "()" in args or "&" in args or "[]" in args:
             # await message.reply_text(capsify("❌ INVALID INPUT. PLEASE AVOID USING SYMBOLS LIKE '()' OR '&'."))
             return
         guess = args.strip().lower()
@@ -135,7 +136,7 @@ async def guess(_, message):
                 capsify(f"❌ INCORRECT NAME.")
             )
             return
-        character_price = character['price']
+        # character_price = character['price']
         user_balance = await show(user_id)
         # if user_balance < character_price:
         temp_true_variable = False
@@ -157,7 +158,7 @@ async def guess(_, message):
         keyboard = [[InlineKeyboardButton(capsify("🌐 HAREM"), switch_inline_query_current_chat=f"collection.{user_id}")]]
         await message.reply_text(
             capsify(
-                f"✅ {message.from_user.first_name}, you got a new waifu\n\n"
+                f"✅ {clean_text(message.from_user.first_name)}, you got a new waifu\n\n"
                 f"🏵 **NAME:** {character['name']}\n"
                 f"🎇 **RARITY:** {character['rarity']}\n"
                 f"👀 **SOURCE :** {character['anime']}\n"

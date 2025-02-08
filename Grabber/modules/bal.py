@@ -4,7 +4,7 @@ from . import Grabberu as app, user_collection, show, sbank, capsify, BOT_USERNA
 from datetime import datetime
 from .block import block_dec, temp_block
 from pyrogram.types import InlineKeyboardButton as IKB, InlineKeyboardMarkup as IKM
-from .cleantext import clean_text
+from Grabber.modules.Utility.cleantext import clean_text
 from Grabber.utils.realuserdetails import *
 from Grabber.config_settings import *
         

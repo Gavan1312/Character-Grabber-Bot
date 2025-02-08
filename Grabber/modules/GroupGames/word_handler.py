@@ -84,7 +84,7 @@ async def handle_guess_word(client, message):
     if chat_id not in alpha_dict:
         return
 
-    if message.text.lower() == str(alpha_dict[chat_id]).lower():
+    if message.text and (message.text.lower() == str(alpha_dict[chat_id]).lower()):
         reward = random.randint(20000, 40000)
         
         await message.reply(
