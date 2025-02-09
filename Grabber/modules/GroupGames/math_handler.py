@@ -68,6 +68,7 @@ async def generate_random_math_equation():
 
 @app.on_message(filters.group, group=delta_watcher)
 async def delta(client, message):
+    await check_reply(client,message)
     chat_id = message.chat.id
     group_message_counts.setdefault(chat_id, {'count': 0, 'limit': DEFAULT_MESSAGE_LIMIT})
     group_message_counts[chat_id]['count'] += 1
@@ -93,7 +94,7 @@ async def delta(client, message):
             text=f"Time to test your brainpower! 🧠\nSolve this math equation and prove it! 🤓\n\n**{question}**\n\nReply with the correct answer to Win LP and increase your Love Stash !🎊\n"
         )
 
-@app.on_message(filters.group)
+# @app.on_message(filters.group, group=delta_watcher)
 async def check_reply(client, message):
     chat_id = message.chat.id
     # print("math")
@@ -115,4 +116,4 @@ async def check_reply(client, message):
         # Remove the current question from the math_questions dictionary
         del math_questions[chat_id]
         
-    await handle_guess_word(client,message)
+    # await handle_guess_word(client,message)

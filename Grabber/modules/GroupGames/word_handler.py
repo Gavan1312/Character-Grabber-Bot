@@ -50,6 +50,7 @@ async def set_message_limit(client, message):
 
 @app.on_message(filters.text, group=gend_watcher)
 async def on_message(client, message):
+    await handle_guess_word(client,message)
     chat_id = message.chat.id
     group_message_counts_for_word.setdefault(chat_id, {'count': 0, 'limit': DEFAULT_MESSAGE_WORD_LIMIT})
     group_message_counts_for_word[chat_id]['count'] += 1

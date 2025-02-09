@@ -1,7 +1,7 @@
-from pyrogram import filters, types as t
 import time
 import asyncio
-from pyrogram import Client
+from pyrogram import Client, filter, types
+from pyrogram.types import Message
 from Grabber import application, user_collection
 from Grabber.modules import add, deduct, show, app
 from Grabber.modules.block import block_dec
@@ -12,7 +12,7 @@ cooldown_duration_dice = 60
 last_usage_time_dice = {}
 
 @app.on_message(filters.command(["roll","dice","dicey"]))
-async def roll_dice(client: Client, message: t.Message):
+async def roll_dice(client: Client, message: Message):
     user_id = message.from_user.id
     current_time = time.time()
 
