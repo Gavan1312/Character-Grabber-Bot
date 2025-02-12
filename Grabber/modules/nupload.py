@@ -8,6 +8,7 @@ from Grabber import collection, db, CHARA_CHANNEL_ID, OWNER_ID
 from Grabber.modules.UploaderPanel.upload_catbox import upload_to_catbox
 from Grabber.modules.Settings.rarityMap import *
 from Grabber.modules.UploaderPanel.upscale import process_upscale
+from Grabber.modules.UploaderPanel.image_jpg_process import process_image_to_jpg
 
 async def get_next_sequence_number(sequence_name):
     sequence_collection = db.sequences
@@ -41,6 +42,8 @@ async def upload_character(client, message, img_url, character_name, anime, rari
     id = str(await get_next_sequence_number('character_id')).zfill(2)
     # price = random.randint(60000, 80000)
     user_link = f'[{message.from_user.first_name}](tg://user?id={message.from_user.id})'
+    img_url = img_url.strip()
+    # print("upload func: " + img_url)
     
     sent_message = await client.send_photo(
         chat_id=CHARA_CHANNEL_ID,
@@ -82,6 +85,7 @@ async def upload(client: Client, message: Message):
     try:
         photo = await client.download_media(message.reply_to_message.photo)
         img_url = upload_to_catbox(photo)
+        # print("upload cmd: " + img_url)
         await upload_character(client, message, img_url, character_name, anime, rarity)
     except Exception as e:
         await message.reply_text(f"An error occurred: {str(e)}")
@@ -97,10 +101,16 @@ async def upload_with_upscale(client: Client, message: Message):
         await message.reply_text("Incorrect format or invalid rarity. Please use the format: 'Name - Name Here\nAnime - Anime Here\nRarity - Number'")
         return
 
+    loading_message = await message.reply_text("Processing your image... ⏳") 
+    
     try:
         photo = await client.download_media(message.reply_to_message.photo)
         upscaled_photo = await process_upscale(photo)
+        upscaled_photo = process_image_to_jpg(upscaled_photo)
         img_url = upload_to_catbox(upscaled_photo)
+        # print("upload quality cmd: " + img_url)
         await upload_character(client, message, img_url, character_name, anime, rarity)
     except Exception as e:
         await message.reply_text(f"An error occurred: {str(e)}")
+    finally:     
+        await loading_message.delete()
