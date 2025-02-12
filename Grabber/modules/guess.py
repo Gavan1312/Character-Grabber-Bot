@@ -10,9 +10,9 @@ from Grabber.config_settings import *
 from .block import block_dec
 
 active_guesses = {}
-COOLDOWN_TIME = 30
+COOLDOWN_TIME = 10
 cooldown_users = {}
-GUESS_TIMEOUT = 60
+GUESS_TIMEOUT = 90
 
 async def get_random_character():
     all_characters = await collection.find({}).to_list(length=None)

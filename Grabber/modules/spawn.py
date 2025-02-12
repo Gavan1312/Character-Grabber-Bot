@@ -118,7 +118,7 @@ async def guess(_, message):
         chat_locks[chat_id] = Lock()
     async with chat_locks[chat_id]:
         args = message.text.split(maxsplit=1)[1] if len(message.text.split()) > 1 else None
-        if not args or "()" in args or "&" in args or "[]" in args:
+        if not args or "(" in args or "&" in args or "[" in args or ")" in args or "]" in args :
             # await message.reply_text(capsify("❌ INVALID INPUT. PLEASE AVOID USING SYMBOLS LIKE '()' OR '&'."))
             return
         guess = args.strip().lower()
