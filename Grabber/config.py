@@ -25,3 +25,4 @@ DATABASE_CHANNEL_ID = 'character_grabber_database'
 # MONGO_URL = "mongodb+srv://justsomeuserforsecurityreasons:kxFRjoLEradFRT6i@cluster0.bklyr.mongodb.net/?retryWrites=true&w=majority&tls=true"
 MONGO_URL = "mongodb+srv://justsomeuserforsecurityreasons:kxFRjoLEradFRT6i@cluster0.bklyr.mongodb.net/Character_Grabber_Game_bot?retryWrites=true&w=majority"
 DATABASE_NAME = "Character_Grabber_Game_bot"
+DB_BKP_CHANNEL_ID = "-1002486591835"

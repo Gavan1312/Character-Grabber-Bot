@@ -25,3 +25,4 @@ DATABASE_CHANNEL_ID = 'somegrouptunknown_Tom_and_jerry'
 # MONGO_URL = "mongodb+srv://justsomeuserforsecurityreasons:kxFRjoLEradFRT6i@cluster0.bklyr.mongodb.net/?retryWrites=true&w=majority&tls=true"
 MONGO_URL = "mongodb+srv://justsomeuserforsecurityreasons:kxFRjoLEradFRT6i@cluster0.bklyr.mongodb.net/N_testing_cg_bot?retryWrites=true&w=majority"
 DATABASE_NAME = "N_testing_cg_bot"
+DB_BKP_CHANNEL_ID = "-1002486591835"
